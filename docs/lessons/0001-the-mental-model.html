@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>0001 · The Mental Model</title>
+  <style>
+/* lesson.css — shared visual language for every lesson page and the index.
+   Inlined into each lesson by scripts/inline.py at generation time. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --accent: #0b5fa5;
+  --border: #d0d0d0;
+  --callout-bg: #f3f7fb;
+  --callout-border: #0b5fa5;
+  --correct: #176b37;
+  --correct-bg: #e8f5ec;
+  --incorrect: #9c2b2b;
+  --incorrect-bg: #faecec;
+  --code-bg: #f4f4f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181b;
+    --fg: #e6e6e6;
+    --muted: #a5a5a5;
+    --accent: #6cb2e8;
+    --border: #3a3f44;
+    --callout-bg: #1c2733;
+    --callout-border: #6cb2e8;
+    --correct: #7fd49a;
+    --correct-bg: #19291e;
+    --incorrect: #e89a9a;
+    --incorrect-bg: #2e1b1b;
+    --code-bg: #22262a;
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--accent); }
+
+code, pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+}
+
+code { padding: 0.1em 0.3em; border-radius: 3px; }
+
+pre {
+  padding: 0.9rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+pre code { padding: 0; background: none; }
+
+.lesson-meta {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Dated callout: the only place for version-sensitive facts.
+   The date slot stays visible so the reader can judge staleness. */
+.dated-callout {
+  border-left: 4px solid var(--callout-border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.dated-callout .callout-date {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+/* Quiz */
+.quiz {
+  border-top: 2px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.quiz-question { margin-bottom: 1.75rem; }
+
+.quiz-stem { font-weight: 600; }
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.quiz-options li { margin: 0.35rem 0; }
+
+.quiz-options button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover:enabled { border-color: var(--accent); }
+
+.quiz-options button:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-options button.correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.quiz-options button.incorrect {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.quiz-feedback { font-weight: 600; }
+
+.quiz-feedback.is-correct { color: var(--correct); }
+
+.quiz-feedback.is-incorrect { color: var(--incorrect); }
+
+.quiz-explain { color: var(--muted); }
+
+.quiz-score {
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* Pointer: the optional "apply this to your own work" line. */
+.pointer {
+  margin-top: 2.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  html { background: #ffffff; color: #000000; }
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  .quiz-options button { border: 1px solid #888888; }
+  .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .pointer { border: 1pt dashed #000000; }
+  a { color: #000000; }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>The Mental Model</h1>
+    <p class="lesson-meta">Track A · lesson 0001 · about 20 minutes</p>
+  </header>
+
+  <main>
+    <p>
+      The <a href="0000-where-tokens-actually-go.html">primer</a> taught one
+      mechanism. One context window holds everything the agent sees: your
+      messages, every file read, every command output. Tokens accumulate, and
+      accuracy degrades as they do. This lesson turns that mechanism into the
+      highest-leverage habit in agentic coding, names the two dials you will
+      meet on day one, and hands you four safe first tasks.
+    </p>
+
+    <h2>Doesn't a huge window solve this?</h2>
+    <p>
+      The primer's dated callout listed window sizes, and they are large. A
+      fair objection follows: with that much room, why keep tasks small at
+      all? The objection deserves a direct answer, because the window sizes
+      keep growing and the answer does not change.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-15</span>
+      <p>
+        Every model in the current Claude lineup &mdash; frontier tier through
+        small tier &mdash; now has a
+        <a href="https://platform.claude.com/docs/en/models/overview">1-million-token context window</a>.
+        The objection above is at its strongest today. The three reasons below
+        still hold.
+      </p>
+    </aside>
+
+    <p>A bigger window is not a sharper window, for three reasons:</p>
+    <ul>
+      <li>
+        <strong>Degradation does not wait for the window to fill.</strong>
+        Recall declines as tokens accumulate &mdash; the gradient the primer
+        called context rot. The model's
+        <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">attention budget</a>
+        draws down with every token added, from the first one. A larger
+        window raises the ceiling. It does not move the gradient.
+      </li>
+      <li>
+        <strong>What fills the window matters as much as how full it is.</strong>
+        A failed attempt does not sit in the window neutrally. It misleads.
+        A big window holds more stale reads, more dead ends, more
+        contradicting attempts &mdash; and the model weighs all of them.
+      </li>
+      <li>
+        <strong>You pay for every token either way.</strong> Tokens are
+        billed whether the model used them well or not. A sprawling session
+        costs more and produces less.
+      </li>
+    </ul>
+    <p>
+      So the window model survives its own good news. However large the
+      buffer, the task that stays small works in the sharp part of the
+      gradient, carries no debris, and costs less. Window size changes none
+      of that.
+    </p>
+
+    <h2>The habit: small, focused tasks</h2>
+    <p>
+      The primer's pointer asked you to list the files an agent would need
+      for one task. That list is the task's <strong>context footprint</strong>:
+      the files read, the outputs generated, the conversation spent. The
+      single highest-leverage habit in agentic coding is to keep that
+      footprint small &mdash; one goal, nameable files, one check that proves
+      the work. The official
+      <a href="https://code.claude.com/docs/en/best-practices">best-practices guide</a>
+      states the same derivation: most best practices follow from one
+      constraint &mdash; the window fills fast, and performance degrades as
+      it fills.
+    </p>
+    <p>Three things follow from the window model, not from taste:</p>
+    <ul>
+      <li>A small task keeps the whole session in the sharp range of the gradient. The model recalls your constraints because few tokens separate it from them.</li>
+      <li>A small task is cheap to verify. One goal and one check mean you can read the diff and run the check in minutes.</li>
+      <li>A small task is cheap to retry. When an attempt goes wrong, you restart in a fresh window and lose little. A sprawling task that goes wrong leaves you correcting code inside a polluted window &mdash; the expensive path from the primer's worked example.</li>
+    </ul>
+    <p>
+      "Small" is a statement about scope, not about importance. "Why does
+      login fail after a session timeout?" is small. "Improve our auth" is
+      not &mdash; however few characters it takes to type.
+    </p>
+
+    <h2>The two dials</h2>
+    <p>
+      Every agentic coding tool exposes two controls that shape cost and
+      capability. This lesson only names them. Track B teaches when to turn
+      them.
+    </p>
+    <ul>
+      <li>
+        <strong>Dial one: which model tier.</strong> Frontier models reason
+        deepest and cost the most. Mid-tier models trade some capability for
+        speed and price. Small-tier models run fast and cheap for
+        high-volume, simple work.
+      </li>
+      <li>
+        <strong>Dial two: how hard the model thinks.</strong> The same model
+        can spend more tokens reasoning before it answers, or fewer. More
+        thinking buys depth on hard problems and costs tokens and time on
+        easy ones.
+      </li>
+    </ul>
+    <p>
+      For your first sessions, the defaults are fine. What matters now is
+      knowing the dials exist: when a task underperforms or overspends, these
+      are the first two settings to question.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-15</span>
+      <p>
+        The <a href="https://platform.claude.com/docs/en/models/overview">current Claude lineup</a>
+        maps to the tiers like this: Claude Opus 5.5 is the frontier-tier
+        default, with Claude Fable 5.1 above it for the most demanding
+        reasoning; Claude Sonnet 5.5 is the mid tier; Claude Haiku 5.5 is the
+        small tier. The thinking dial is the
+        <a href="https://platform.claude.com/docs/en/build-with-claude/effort">effort setting</a>,
+        with five levels from <code>low</code> to <code>max</code>. Names and
+        levels change between releases. The two dials do not.
+      </p>
+    </aside>
+
+    <h2>Four first wins</h2>
+    <p>
+      These four tasks are the standard menu for a first week. They are not
+      four tricks. Each is an instance of one property:
+      <strong>bounded scope, checkable outcome, small context footprint.</strong>
+    </p>
+    <ul>
+      <li>
+        <strong>Stack-trace analysis.</strong> The trace bounds the scope: it
+        names the files and the failing line. The outcome is checkable: the
+        error reproduces or it does not. The footprint is the trace plus a
+        few files.
+      </li>
+      <li>
+        <strong>A named refactoring.</strong> "Extract the retry logic in
+        <code>client.py</code> into one function" bounds scope to named code.
+        The existing tests are the check. The footprint is one or two files.
+      </li>
+      <li>
+        <strong>Test generation.</strong> "Write tests for
+        <code>parse_duration</code>, covering negative input" bounds scope to
+        one behavior. The outcome checks itself: the tests run. The footprint
+        is the function and its callers.
+      </li>
+      <li>
+        <strong>Codebase questions.</strong> Ask what you would ask a senior
+        engineer: "How does logging work here?" The scope is one question.
+        The check is reading the cited code yourself. The footprint is the
+        agent's reads &mdash; and a wrong answer costs you nothing to
+        discard.
+      </li>
+    </ul>
+    <p>
+      The menu is not the lesson; the property is. Any task with all three
+      clauses is a first win, including tasks this menu never names. And a
+      menu item phrased without bounds loses the property: "refactor the
+      service" is not a named refactoring, and "add tests for the payment
+      module" is not test generation. The property, not the category, does
+      the work.
+    </p>
+
+    <h2>Worked example: one stack trace, start to finish</h2>
+    <p>
+      A nightly report job fails. The log ends with this trace. Read it
+      yourself first: where would you look, and what would you want to know?
+    </p>
+    <pre><code>Traceback (most recent call last):
+  File "app/jobs/report.py", line 48, in build_summary
+    totals = aggregate(rows)
+  File "app/jobs/aggregate.py", line 21, in aggregate
+    bucket[row["region"]] += row["amount"]
+KeyError: 'region'</code></pre>
+    <p>
+      Now the prompt. Note how little it takes to satisfy the property: the
+      trace bounds the scope, a named directory narrows the search, and the
+      last line requests a checkable deliverable.
+    </p>
+    <pre><code>The nightly report job failed with the trace below. The rows
+come from the CSV importer in app/jobs/ingest.py. Why is
+"region" missing, and what is the smallest fix? Name the
+commit-sized change and the test that would have caught this.
+
+[trace pasted here]</code></pre>
+    <p>A plausible reply, condensed:</p>
+    <pre><code>Read app/jobs/aggregate.py and app/jobs/ingest.py.
+
+Cause: ingest.py line 33 now emits the column as
+"sales_region" (renamed in the importer two weeks ago);
+aggregate.py line 21 still reads row["region"]. Every
+row raises KeyError on the first lookup.
+
+Smallest fix: read "sales_region" in aggregate.py, or
+restore the name at the importer boundary. The boundary
+fix is safer: three other consumers also read "region".
+
+Missing test: a round-trip test that feeds one imported
+row into aggregate() &mdash; it fails on the rename.</code></pre>
+    <p>Walk the property through what happened:</p>
+    <ul>
+      <li><strong>Bounded scope.</strong> The agent read two files, because the trace and the prompt named them. No exploration spiral.</li>
+      <li><strong>Small footprint.</strong> A trace runs a few hundred tokens; two files a few thousand. The whole exchange fits in the sharpest part of the window.</li>
+      <li><strong>Checkable outcome.</strong> The claimed cause names two lines you can open and read. The proposed test fails before the fix and passes after. You verify in minutes &mdash; and the answer about three other consumers is exactly the kind of claim you check rather than trust.</li>
+    </ul>
+    <p>
+      This is the shape to copy: evidence in, named files, a deliverable the
+      code itself can confirm.
+    </p>
+
+    <h2>Keep going</h2>
+    <p>
+      One primary source is worth your next twenty minutes: the official
+      <a href="https://code.claude.com/docs/en/best-practices">Claude Code best-practices guide</a>.
+      Its opening section derives the practices from the same window
+      constraint this lesson builds on, and the rest previews the habits
+      Track A develops next.
+    </p>
+    <p>
+      Keep noting questions as you read. When tool access arrives, the agent
+      is your teacher: paste a question in and ask. Until then, the
+      <a href="0000-where-tokens-actually-go.html">primer</a> and this page
+      are worth a second pass.
+    </p>
+
+    <!-- Quiz: exactly 5 questions. Markup contract documented in assets/quiz.js. -->
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">Which request is the best first task for an agent?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Clean up the codebase and modernize the tooling</button></li>
+            <li><button type="button" data-option="b">Make the service faster wherever you see waste</button></li>
+            <li><button type="button" data-option="c">Explain why POST /orders returns 500 on empty carts</button></li>
+            <li><button type="button" data-option="d">Rewrite the whole suite so the tests run faster</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>One behavior, a few files, and an answer the code can confirm: bounded scope, checkable outcome, small footprint. The other three are unbounded, uncheckable, or both.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">What single property do all four first wins share?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">They are safe to merge without human review</button></li>
+            <li><button type="button" data-option="b">Bounded scope, checkable outcome, small context footprint</button></li>
+            <li><button type="button" data-option="c">They avoid reading any source files at all</button></li>
+            <li><button type="button" data-option="d">They run best on the small model tier</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The menu is four instances of one property. Any task with all three clauses qualifies, whether or not the menu names it.</p>
+        </li>
+        <li class="quiz-question" data-correct="d">
+          <p class="quiz-stem">Why does a small task produce sharper output than a sprawling one?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The model gives short prompts extra attention</button></li>
+            <li><button type="button" data-option="b">Small diffs always contain fewer logic errors</button></li>
+            <li><button type="button" data-option="c">The agent skips planning on smaller requests</button></li>
+            <li><button type="button" data-option="d">A small footprint keeps the window in its sharp range</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Accuracy degrades as tokens accumulate. A small footprint keeps the whole session early on that gradient, where recall is strongest.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">What are the two dials this lesson names?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Which model tier, and how hard the model thinks</button></li>
+            <li><button type="button" data-option="b">How many files to read, and which tests to run</button></li>
+            <li><button type="button" data-option="c">Which language to target, and which framework to use</button></li>
+            <li><button type="button" data-option="d">How long to plan, and how often to start fresh</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Model tier and thinking depth. Both trade capability against cost. Track B teaches when to turn them; for now, know they exist.</p>
+        </li>
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">You ask for "tests for the payment module." The agent reads forty files and writes shallow tests. Which clause did the request break?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Checkable outcome, because tests cannot verify themselves</button></li>
+            <li><button type="button" data-option="b">None, because the task needed a frontier model</button></li>
+            <li><button type="button" data-option="c">Bounded scope, because it named a module, not a behavior</button></li>
+            <li><button type="button" data-option="d">None, because the model was thinking too little</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>A module is a territory; a behavior is a task. Name the function and the edge case, and the footprint shrinks to match. The dials were never the problem.</p>
+        </li>
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <!-- Pointer: the optional "apply this to your own work" line. Always last. -->
+    <p class="pointer">Optional: pick one bug or one question from your current work and write the prompt you would hand an agent &mdash; the goal, the files involved, and the check that proves the work. Keep it. It is your first session's opening move.</p>
+  </main>
+
+  <script>
+// quiz.js — instant-feedback quiz widget. Vanilla JS, no dependencies.
+//
+// Expected markup, one block per lesson:
+//
+//   <section class="quiz" id="quiz">
+//     <h2>Quiz</h2>
+//     <ol class="quiz-questions">
+//       <li class="quiz-question" data-correct="b">
+//         <p class="quiz-stem">Question text?</p>
+//         <ul class="quiz-options">
+//           <li><button type="button" data-option="a">First option</button></li>
+//           <li><button type="button" data-option="b">Second option</button></li>
+//         </ul>
+//         <p class="quiz-feedback" hidden></p>
+//         <p class="quiz-explain" hidden>Why the answer is right.</p>
+//       </li>
+//     </ol>
+//     <p class="quiz-score" hidden></p>
+//   </section>
+//
+// Behavior: the learner clicks one option per question. The widget shows
+// right or wrong at once, reveals the explanation, and locks the question.
+// When every question is answered, the widget shows the score.
+
+(function () {
+  'use strict';
+
+  function answerQuestion(question, button, state) {
+    var correct = question.getAttribute('data-correct');
+    var chosen = button.getAttribute('data-option');
+    var isCorrect = chosen === correct;
+
+    question.querySelectorAll('.quiz-options button').forEach(function (b) {
+      b.disabled = true;
+      if (b.getAttribute('data-option') === correct) {
+        b.classList.add('correct');
+      }
+    });
+    if (!isCorrect) {
+      button.classList.add('incorrect');
+    }
+
+    var feedback = question.querySelector('.quiz-feedback');
+    if (feedback) {
+      feedback.textContent = isCorrect
+        ? 'Correct.'
+        : 'Not quite. The marked option is the answer.';
+      feedback.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+      feedback.hidden = false;
+    }
+
+    var explain = question.querySelector('.quiz-explain');
+    if (explain) {
+      explain.hidden = false;
+    }
+
+    state.answered += 1;
+    if (isCorrect) {
+      state.correct += 1;
+    }
+    if (state.answered === state.total && state.scoreEl) {
+      state.scoreEl.textContent =
+        'Score: ' + state.correct + ' of ' + state.total + '.';
+      state.scoreEl.hidden = false;
+    }
+  }
+
+  function initQuiz(quiz) {
+    var questions = quiz.querySelectorAll('.quiz-question');
+    var state = {
+      total: questions.length,
+      answered: 0,
+      correct: 0,
+      scoreEl: quiz.querySelector('.quiz-score')
+    };
+
+    questions.forEach(function (question) {
+      question.querySelectorAll('.quiz-options button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          answerQuestion(question, button, state);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.quiz').forEach(initQuiz);
+  });
+})();
+</script>
+</body>
+</html>
