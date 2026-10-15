@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!-- sample-lesson.html — test fixture built from assets/lesson-template.html.
+     Exercises every template feature: stylesheet link, dated callout,
+     5-question quiz, pointer, quiz script. Not a real lesson. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sample — Fixture Lesson</title>
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+  <header>
+    <h1>Sample fixture lesson</h1>
+    <p class="lesson-meta">Fixture · about 5 minutes</p>
+  </header>
+
+  <main>
+    <p>This page tests the lesson template. One context window holds everything the agent sees. The window fills fast. Scope each task small enough to fit.</p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-15</span>
+      <p>This callout holds a version-sensitive fact. The spine above it holds none.</p>
+    </aside>
+
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">Where does every file read end up?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">In a separate cache</button></li>
+            <li><button type="button" data-option="b">In the context window</button></li>
+            <li><button type="button" data-option="c">On disk only</button></li>
+            <li><button type="button" data-option="d">Nowhere</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The context window holds every message, file read, and tool output.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">What happens as the window fills?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Performance degrades</button></li>
+            <li><button type="button" data-option="b">Performance improves</button></li>
+            <li><button type="button" data-option="c">Nothing changes</button></li>
+            <li><button type="button" data-option="d">The agent speeds up</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Context degradation is the primary failure mode of agentic coding.</p>
+        </li>
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">Where do model names belong in a lesson?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">In the lesson spine</button></li>
+            <li><button type="button" data-option="b">In the quiz</button></li>
+            <li><button type="button" data-option="c">In a dated callout</button></li>
+            <li><button type="button" data-option="d">In the pointer</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Version-sensitive facts live in dated callouts. The spine uses tier words.</p>
+        </li>
+        <li class="quiz-question" data-correct="d">
+          <p class="quiz-stem">How many questions does a lesson quiz hold?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Two</button></li>
+            <li><button type="button" data-option="b">Three</button></li>
+            <li><button type="button" data-option="c">Four</button></li>
+            <li><button type="button" data-option="d">Five</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Every lesson ends with a 5-question quiz, then the pointer.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">Is the pointer required coursework?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">No — it is untracked homework</button></li>
+            <li><button type="button" data-option="b">Yes — it is graded</button></li>
+            <li><button type="button" data-option="c">Yes — it gates the next lesson</button></li>
+            <li><button type="button" data-option="d">No — lessons have no pointer</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The pointer is optional. No lesson tracks it.</p>
+        </li>
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <p class="pointer">Pointer: open one past task and ask whether the task fit one context window.</p>
+  </main>
+
+  <script src="../../assets/quiz.js"></script>
+</body>
+</html>

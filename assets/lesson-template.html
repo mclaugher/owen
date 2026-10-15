@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+  lesson-template.html — the skeleton for every lesson page.
+
+  How to use this template:
+  1. Copy this file to docs/lessons/<number>-<slug>.html.
+  2. Replace every [SLOT] marker with lesson content.
+  3. Keep the quiz block and the pointer as the last two sections.
+  4. Put every version-sensitive fact in a .dated-callout with a visible date.
+  5. Run `python3 scripts/inline.py <lesson> <output>` as the final step.
+     The inliner replaces the two local references below with inline content.
+     The relative paths assume the lesson sits in docs/lessons/.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>[SLOT: lesson number and title]</title>
+  <link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+  <header>
+    <h1>[SLOT: lesson title]</h1>
+    <p class="lesson-meta">[SLOT: track and lesson number] · about [SLOT: minutes] minutes</p>
+  </header>
+
+  <main>
+    <!-- [SLOT: spaced callback to the prior lesson's shaky item — primer excepted] -->
+
+    <!-- [SLOT: lesson spine — durable principles only, tier words only] -->
+
+    <!-- Dated callout: the only place for version-sensitive facts.
+         Repeat this block as needed. Keep the date slot visible. -->
+    <aside class="dated-callout">
+      <span class="callout-date">Verified [SLOT: YYYY-MM-DD]</span>
+      <p>[SLOT: version-sensitive fact — model names, commands, toggles, limits]</p>
+    </aside>
+
+    <!-- Quiz: exactly 5 questions. Markup contract documented in assets/quiz.js. -->
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="[SLOT: a-d]">
+          <p class="quiz-stem">[SLOT: question 1]</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">[SLOT: option a]</button></li>
+            <li><button type="button" data-option="b">[SLOT: option b]</button></li>
+            <li><button type="button" data-option="c">[SLOT: option c]</button></li>
+            <li><button type="button" data-option="d">[SLOT: option d]</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>[SLOT: why the answer is right]</p>
+        </li>
+        <!-- [SLOT: questions 2–5, same structure] -->
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <!-- Pointer: the optional "apply this to your own work" line. Always last. -->
+    <p class="pointer">[SLOT: pointer — one line, optional homework, never required]</p>
+  </main>
+
+  <script src="../../assets/quiz.js"></script>
+</body>
+</html>
