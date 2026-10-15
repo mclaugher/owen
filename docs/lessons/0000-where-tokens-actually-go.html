@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>0000 · Where Tokens Actually Go</title>
+  <style>
+/* lesson.css — shared visual language for every lesson page and the index.
+   Inlined into each lesson by scripts/inline.py at generation time. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --accent: #0b5fa5;
+  --border: #d0d0d0;
+  --callout-bg: #f3f7fb;
+  --callout-border: #0b5fa5;
+  --correct: #176b37;
+  --correct-bg: #e8f5ec;
+  --incorrect: #9c2b2b;
+  --incorrect-bg: #faecec;
+  --code-bg: #f4f4f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181b;
+    --fg: #e6e6e6;
+    --muted: #a5a5a5;
+    --accent: #6cb2e8;
+    --border: #3a3f44;
+    --callout-bg: #1c2733;
+    --callout-border: #6cb2e8;
+    --correct: #7fd49a;
+    --correct-bg: #19291e;
+    --incorrect: #e89a9a;
+    --incorrect-bg: #2e1b1b;
+    --code-bg: #22262a;
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--accent); }
+
+code, pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+}
+
+code { padding: 0.1em 0.3em; border-radius: 3px; }
+
+pre {
+  padding: 0.9rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+pre code { padding: 0; background: none; }
+
+.lesson-meta {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Dated callout: the only place for version-sensitive facts.
+   The date slot stays visible so the reader can judge staleness. */
+.dated-callout {
+  border-left: 4px solid var(--callout-border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.dated-callout .callout-date {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+/* Quiz */
+.quiz {
+  border-top: 2px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.quiz-question { margin-bottom: 1.75rem; }
+
+.quiz-stem { font-weight: 600; }
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.quiz-options li { margin: 0.35rem 0; }
+
+.quiz-options button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover:enabled { border-color: var(--accent); }
+
+.quiz-options button:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-options button.correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.quiz-options button.incorrect {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.quiz-feedback { font-weight: 600; }
+
+.quiz-feedback.is-correct { color: var(--correct); }
+
+.quiz-feedback.is-incorrect { color: var(--incorrect); }
+
+.quiz-explain { color: var(--muted); }
+
+.quiz-score {
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* Pointer: the optional "apply this to your own work" line. */
+.pointer {
+  margin-top: 2.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  html { background: #ffffff; color: #000000; }
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  .quiz-options button { border: 1px solid #888888; }
+  .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .pointer { border: 1pt dashed #000000; }
+  a { color: #000000; }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Where Tokens Actually Go</h1>
+    <p class="lesson-meta">Shared primer · lesson 0000 · about 15 minutes</p>
+  </header>
+
+  <main>
+    <p>
+      This primer teaches one mechanism: the context window. Every habit this
+      curriculum teaches follows from how that window fills and what a full
+      window does to the model. Learn the mechanism once, and the habits stop
+      being rules to memorize. They become predictions you can make yourself.
+    </p>
+
+    <h2>One window holds everything</h2>
+    <p>
+      An agentic coding tool is a language model in a loop. The model reads
+      your request, decides on an action, runs a tool, reads the result, and
+      repeats. Everything the model can see while it works sits in one place:
+      the <strong>context window</strong>. Anthropic's documentation describes
+      the window as the model's
+      <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">&ldquo;working memory&rdquo;</a>.
+      The window is not a search index. The window is not a database. The
+      window is a single, finite buffer of text.
+    </p>
+    <p>Everything in a session lands in that one buffer:</p>
+    <ul>
+      <li>Your messages, and every reply the agent writes.</li>
+      <li>Every file the agent reads &mdash; the whole portion read, not a summary.</li>
+      <li>Every command output: test runs, build logs, stack traces, diffs.</li>
+      <li>The agent's standing instructions and tool definitions.</li>
+      <li>The model's own reasoning on the way to each reply.</li>
+    </ul>
+    <p>
+      Nothing here is controversial. The
+      <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">official docs</a>
+      list the same inventory. System prompt, messages, tool results,
+      documents, tool definitions, and the model's output all count.
+      The surprise is never the list. The surprise is the arithmetic.
+    </p>
+
+    <h2>Tokens: the unit the window is measured in</h2>
+    <p>
+      Models read text as <strong>tokens</strong>: small chunks, each a few
+      characters of English on average
+      (<a href="https://platform.claude.com/docs/en/about-claude/glossary#tokens">glossary</a>).
+      A word is often one or two tokens. A 300-line source file is a few
+      thousand tokens. A failing test run with stack traces is often a few
+      thousand more. A verbose build log can be tens of thousands on its own.
+    </p>
+    <p>
+      Now run a plausible session in your head. The agent orients itself in an
+      unfamiliar repo: ten file reads, roughly 40,000 tokens. Two test runs
+      with failures: 15,000. The conversation itself &mdash; requests, diffs,
+      explanations: 15,000. That session reached 70,000 tokens before the
+      second hour. The window fills faster than you think, and nothing in the
+      interface makes the filling visible by default.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-15</span>
+      <p>
+        Current frontier- and mid-tier Claude models have a
+        <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model">1-million-token context window</a>;
+        older and smaller models have 200,000 tokens. One reply can run up to
+        128,000 tokens. On older Claude models a token averages about 3.5
+        English characters. Models from Claude 4.7 on tokenize the same text
+        into roughly 30 percent more tokens
+        (<a href="https://platform.claude.com/docs/en/about-claude/glossary#tokens">glossary</a>).
+        Window sizes and tokenizers change between releases. The mechanism in
+        this lesson does not.
+      </p>
+    </aside>
+
+    <h2>A fuller window is a weaker model</h2>
+    <p>
+      A bigger window does not mean the model uses the whole window equally
+      well. The official documentation states the limit plainly: &ldquo;As
+      token count grows, accuracy and recall degrade, a phenomenon known as
+      <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows#how-the-context-window-works">context rot</a>.&rdquo;
+      Anthropic's engineering guidance says the same thing from the inside:
+      models have a finite
+      <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">&ldquo;attention budget&rdquo;</a>.
+      Every token added draws that budget down. The same piece says to treat
+      context &ldquo;as a finite resource with diminishing marginal returns.&rdquo;
+    </p>
+    <p>
+      Degradation is a gradient, not a cliff. The model does not fail at some
+      threshold. The model gets gradually worse at recalling what it read an
+      hour ago. The model holds your constraints less firmly. The model misses
+      that attempt three contradicts attempt one. You experience the gradient as a session that
+      starts sharp and turns vague. The model did not change. The window did.
+    </p>
+
+    <h2>Why this one fact matters most</h2>
+    <p>
+      Context degradation is the primary failure mode of agentic coding. Most
+      sessions that go wrong go wrong this way. No error appears. The window
+      fills with reads, failed attempts, and logs until the model can no
+      longer work accurately inside it. Every best practice in this curriculum
+      is downstream of this fact. Each one is a prediction the window model
+      makes:
+    </p>
+    <ul>
+      <li><strong>Keep tasks small.</strong> A small task has a small context footprint, so the model works in the sharp part of the gradient.</li>
+      <li><strong>Plan before code.</strong> Spend cheap tokens on a plan to avoid expensive correction loops. The worked example below shows the arithmetic.</li>
+      <li><strong>Start fresh sessions.</strong> A new task in an old window inherits every stale token the old task left behind.</li>
+      <li><strong>Verify the output.</strong> A model working deep in a full window makes exactly the confident mistakes that are hardest to spot.</li>
+    </ul>
+    <p>
+      The next lessons develop each habit. Here, only the mechanism matters:
+      tokens accumulate, accumulation degrades, so where tokens go decides how
+      well the model works.
+    </p>
+
+    <h2>Worked example: invest tokens to save tokens</h2>
+    <p>
+      The task: add a rate limit to a file-upload endpoint in a mid-sized
+      service. Two ways to spend the window. The numbers below are a worked
+      illustration with plausible magnitudes, not a benchmark. Your files,
+      your tests, and your tool set the real figures.
+    </p>
+
+    <h3>Path one: straight to code</h3>
+    <ol>
+      <li>You ask for the change in one line. The agent reads six files to orient itself: <strong>24,000 tokens</strong>.</li>
+      <li>The first attempt patches the wrong middleware layer. Diff and explanation: <strong>4,000</strong>.</li>
+      <li>The test run fails. Full output with stack traces: <strong>8,000</strong>.</li>
+      <li>You redirect the agent. The agent re-reads four files and tries again: <strong>20,000</strong>.</li>
+      <li>The tests fail differently. More output, more reading, a third attempt: <strong>24,000</strong>.</li>
+      <li>The tests pass: <strong>2,000</strong>.</li>
+    </ol>
+    <p>
+      Running total: about <strong>82,000 tokens</strong>. Worse than the
+      total is the composition. The agent wrote the passing attempt in a
+      window still holding two failed attempts and two walls of test output.
+    </p>
+
+    <h3>Path two: one planning pass first</h3>
+    <ol>
+      <li>You ask for a plan, not code. The agent reads five files: <strong>20,000 tokens</strong>. The agent writes a short plan naming the layer, the config knob, and the test to extend: <strong>2,000</strong>.</li>
+      <li>You spot the wrong assumption in the plan and correct it with one sentence: <strong>500</strong>.</li>
+      <li>The agent implements the corrected plan. Diff, one test run, a pass: <strong>14,000</strong>.</li>
+    </ol>
+    <p>
+      Running total: about <strong>36,500 tokens</strong>. The difference is
+      not model quality. The difference is where the correction happened. On
+      path one you corrected finished code. Each correction cost file
+      reads, a rewrite, and a test run. On path two you corrected a plan, and
+      the correction cost one sentence. Same mistake, two prices. The agent
+      also wrote the final code in a window that held a correct plan, not
+      past failures.
+    </p>
+
+    <h2>Keep going</h2>
+    <p>
+      One primary source is worth your next twenty minutes:
+      <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a>
+      (Anthropic engineering blog). The piece develops the attention budget
+      and context rot in depth, from the people who run the measurements.
+    </p>
+    <p>
+      Keep a note of questions this primer raises. When you get tool access,
+      the agent itself is your teacher: paste a question in and ask.
+    </p>
+
+    <!-- Quiz: exactly 5 questions. Markup contract documented in assets/quiz.js. -->
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">An agent reads three files, runs the tests, and replies. What counts toward the context window?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Only the reply the agent writes</button></li>
+            <li><button type="button" data-option="b">Only the files the agent reads</button></li>
+            <li><button type="button" data-option="c">The files, test output, and reply</button></li>
+            <li><button type="button" data-option="d">Only the messages you typed in</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>One window holds everything: your messages, file reads, tool output, instructions, and the model's own output.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">What happens to model accuracy as the context window fills?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Accuracy holds until the window overflows</button></li>
+            <li><button type="button" data-option="b">Accuracy degrades gradually as tokens accumulate</button></li>
+            <li><button type="button" data-option="c">Accuracy improves because more context helps</button></li>
+            <li><button type="button" data-option="d">Accuracy drops once, then stays level</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Degradation is a gradient, not a cliff: recall and accuracy decline as token count grows. The docs call this context rot.</p>
+        </li>
+        <li class="quiz-question" data-correct="d">
+          <p class="quiz-stem">A two-hour debugging session grows less coherent the longer it runs. What is the most likely cause?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The model slows under heavy server load</button></li>
+            <li><button type="button" data-option="b">The code grew too complex to parse</button></li>
+            <li><button type="button" data-option="c">The model ran out of training data</button></li>
+            <li><button type="button" data-option="d">The window filled, and recall is degrading</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Two hours of reads, failed attempts, and logs fill the window. The model works in the degraded part of the gradient.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">In the worked example, why did the planned path cost fewer tokens overall?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Planning prevented correction turns that reload context</button></li>
+            <li><button type="button" data-option="b">Planning made the model write shorter replies</button></li>
+            <li><button type="button" data-option="c">Planning let the model skip the tests</button></li>
+            <li><button type="button" data-option="d">Planning compressed the files before each read</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Correcting a plan costs a sentence. Correcting finished code costs re-reads, rewrites, and test runs &mdash; the debugging spiral.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">Which fact belongs in a dated callout rather than the lesson spine?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The window holds everything the agent sees</button></li>
+            <li><button type="button" data-option="b">Current frontier models hold one million tokens</button></li>
+            <li><button type="button" data-option="c">A fuller window means a weaker recall</button></li>
+            <li><button type="button" data-option="d">Small tasks keep the context footprint small</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Exact window sizes change between model releases, so they carry a verification date. The mechanism is durable.</p>
+        </li>
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <!-- Pointer: the optional "apply this to your own work" line. Always last. -->
+    <p class="pointer">Optional: pick one task from your backlog and list the files an agent would need to read. That list is the task's context footprint &mdash; you will use this instinct in the next lesson.</p>
+  </main>
+
+  <script>
+// quiz.js — instant-feedback quiz widget. Vanilla JS, no dependencies.
+//
+// Expected markup, one block per lesson:
+//
+//   <section class="quiz" id="quiz">
+//     <h2>Quiz</h2>
+//     <ol class="quiz-questions">
+//       <li class="quiz-question" data-correct="b">
+//         <p class="quiz-stem">Question text?</p>
+//         <ul class="quiz-options">
+//           <li><button type="button" data-option="a">First option</button></li>
+//           <li><button type="button" data-option="b">Second option</button></li>
+//         </ul>
+//         <p class="quiz-feedback" hidden></p>
+//         <p class="quiz-explain" hidden>Why the answer is right.</p>
+//       </li>
+//     </ol>
+//     <p class="quiz-score" hidden></p>
+//   </section>
+//
+// Behavior: the learner clicks one option per question. The widget shows
+// right or wrong at once, reveals the explanation, and locks the question.
+// When every question is answered, the widget shows the score.
+
+(function () {
+  'use strict';
+
+  function answerQuestion(question, button, state) {
+    var correct = question.getAttribute('data-correct');
+    var chosen = button.getAttribute('data-option');
+    var isCorrect = chosen === correct;
+
+    question.querySelectorAll('.quiz-options button').forEach(function (b) {
+      b.disabled = true;
+      if (b.getAttribute('data-option') === correct) {
+        b.classList.add('correct');
+      }
+    });
+    if (!isCorrect) {
+      button.classList.add('incorrect');
+    }
+
+    var feedback = question.querySelector('.quiz-feedback');
+    if (feedback) {
+      feedback.textContent = isCorrect
+        ? 'Correct.'
+        : 'Not quite. The marked option is the answer.';
+      feedback.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+      feedback.hidden = false;
+    }
+
+    var explain = question.querySelector('.quiz-explain');
+    if (explain) {
+      explain.hidden = false;
+    }
+
+    state.answered += 1;
+    if (isCorrect) {
+      state.correct += 1;
+    }
+    if (state.answered === state.total && state.scoreEl) {
+      state.scoreEl.textContent =
+        'Score: ' + state.correct + ' of ' + state.total + '.';
+      state.scoreEl.hidden = false;
+    }
+  }
+
+  function initQuiz(quiz) {
+    var questions = quiz.querySelectorAll('.quiz-question');
+    var state = {
+      total: questions.length,
+      answered: 0,
+      correct: 0,
+      scoreEl: quiz.querySelector('.quiz-score')
+    };
+
+    questions.forEach(function (question) {
+      question.querySelectorAll('.quiz-options button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          answerQuestion(question, button, state);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.quiz').forEach(initQuiz);
+  });
+})();
+</script>
+</body>
+</html>
