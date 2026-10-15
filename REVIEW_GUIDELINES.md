@@ -13,3 +13,4 @@ The review loop reads this file before every review and appends lessons here.
 - Org-specific content anywhere in the repo is a rejection.
 - Example material that is not publicly available is a rejection.
 - A deviation from CURRICULUM.md or the vendored skill with no DECISIONS.md entry is a rejection.
+- A dated-callout claim that the cited page contradicts for any current model is a rejection. Check each tier-level claim against the sizes-by-model table.
