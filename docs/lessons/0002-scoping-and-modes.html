@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>0002 · Scoping and Modes</title>
+  <style>
+/* lesson.css — shared visual language for every lesson page and the index.
+   Inlined into each lesson by scripts/inline.py at generation time. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --accent: #0b5fa5;
+  --border: #d0d0d0;
+  --callout-bg: #f3f7fb;
+  --callout-border: #0b5fa5;
+  --correct: #176b37;
+  --correct-bg: #e8f5ec;
+  --incorrect: #9c2b2b;
+  --incorrect-bg: #faecec;
+  --code-bg: #f4f4f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181b;
+    --fg: #e6e6e6;
+    --muted: #a5a5a5;
+    --accent: #6cb2e8;
+    --border: #3a3f44;
+    --callout-bg: #1c2733;
+    --callout-border: #6cb2e8;
+    --correct: #7fd49a;
+    --correct-bg: #19291e;
+    --incorrect: #e89a9a;
+    --incorrect-bg: #2e1b1b;
+    --code-bg: #22262a;
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--accent); }
+
+code, pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+}
+
+code { padding: 0.1em 0.3em; border-radius: 3px; }
+
+pre {
+  padding: 0.9rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+pre code { padding: 0; background: none; }
+
+.lesson-meta {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Dated callout: the only place for version-sensitive facts.
+   The date slot stays visible so the reader can judge staleness. */
+.dated-callout {
+  border-left: 4px solid var(--callout-border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.dated-callout .callout-date {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+/* Quiz */
+.quiz {
+  border-top: 2px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.quiz-question { margin-bottom: 1.75rem; }
+
+.quiz-stem { font-weight: 600; }
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.quiz-options li { margin: 0.35rem 0; }
+
+.quiz-options button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover:enabled { border-color: var(--accent); }
+
+.quiz-options button:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-options button.correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.quiz-options button.incorrect {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.quiz-feedback { font-weight: 600; }
+
+.quiz-feedback.is-correct { color: var(--correct); }
+
+.quiz-feedback.is-incorrect { color: var(--incorrect); }
+
+.quiz-explain { color: var(--muted); }
+
+.quiz-score {
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* Pointer: the optional "apply this to your own work" line. */
+.pointer {
+  margin-top: 2.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  html { background: #ffffff; color: #000000; }
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  .quiz-options button { border: 1px solid #888888; }
+  .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .pointer { border: 1pt dashed #000000; }
+  a { color: #000000; }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Scoping and Modes</h1>
+    <p class="lesson-meta">Track A · lesson 0002 · about 20 minutes</p>
+  </header>
+
+  <main>
+    <p>
+      <a href="0001-the-mental-model.html">A1</a> ended with a prompt in three
+      parts: the goal, the files, the check. It left one question open: when
+      is a task small enough to skip the planning pass? The question matters
+      because engineers miss it in both directions. Some treat planning as a
+      ritual and plan every one-line fix. Others skip planning on multi-file
+      work because the request was short to type &mdash; and A1 already showed
+      why short to type is not small in scope. This lesson gives you the test
+      that settles it, the four modes every agentic tool offers, and one rule
+      you will carry into the next lesson.
+    </p>
+
+    <h2>Spend tokens on purpose</h2>
+    <p>
+      The <a href="0000-where-tokens-actually-go.html">primer</a> showed where
+      tokens go by default: wherever the session drifts. This lesson is about
+      spending them on purpose, and the flagship discipline is
+      <strong>plan before code</strong>. A planning pass is a session, or a
+      mode, in which the agent can read but not change. It reads the files,
+      maps the blast radius, and hands you a plan. You spend reading-and-deciding
+      tokens before any editing tokens &mdash; the same investment the primer's
+      worked example priced: a bounded cost up front against an unbounded
+      debugging spiral later.
+    </p>
+    <p>
+      A plan has one property no diff has: it is the cheapest artifact you
+      will ever correct. Cutting a step from a plan costs one sentence.
+      Cutting the same step out of finished code costs a review argument and
+      a rewrite &mdash; inside a window already polluted by the attempt.
+    </p>
+
+    <h2>The test: name the files and the check</h2>
+    <p>
+      So when do you skip the pass? Use one test.
+      <strong>Skip the planning pass when you can name every file the change
+      touches and the check that proves the work. Plan when you cannot.</strong>
+    </p>
+    <p>
+      The test works because it measures the right thing. When you can name
+      the files and the check, the plan already exists &mdash; in your head.
+      Asking the agent to write it again is the ritual. When you cannot name
+      them, someone has to find them, and the planning pass finds them at the
+      price of reads instead of the price of wrong edits. Notice what the
+      test ignores: how long the request took to type, and how urgent the
+      work feels. "Fix the typo on line 80 of README.md" names the file and
+      the check &mdash; skip. "Rename the config key <code>timeout</code>
+      everywhere it is used" is nine words, and you cannot name its files
+      &mdash; plan.
+    </p>
+
+    <h2>The four modes</h2>
+    <p>
+      Agentic tools expose a ladder of operating modes. The names vary by
+      tool and by release; the rungs do not.
+    </p>
+    <ul>
+      <li>
+        <strong>Read-only planning.</strong> The agent reads and proposes.
+        Nothing on disk changes until you approve.
+      </li>
+      <li>
+        <strong>Approval-per-action.</strong> The agent works, and each
+        consequential action &mdash; an edit, a command &mdash; waits for
+        your yes.
+      </li>
+      <li>
+        <strong>Auto-accepted edits.</strong> Edits apply without asking.
+        You review the result, not each step.
+      </li>
+      <li>
+        <strong>Unattended operation.</strong> The agent runs with no one
+        watching. The environment it runs in is the only boundary left.
+      </li>
+    </ul>
+    <p>
+      Each rung down the list trades control for flow. The trade is real:
+      approval prompts interrupt, and an hour of them makes the next rung
+      look attractive. That is exactly the failure to avoid.
+      <strong>Match the mode to the risk of the work, not to your
+      patience.</strong> Risk is a property of the task: what the change can
+      break, and how cheaply you can undo it. A scratch-branch prototype
+      under fast tests earns auto-accepted edits &mdash; the blast radius is
+      a branch you can delete. An edit near deploy configuration earns
+      approval-per-action however tedious the prompts feel, because your
+      patience ran out and the blast radius did not shrink.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-15</span>
+      <p>
+        In Claude Code the ladder maps to named
+        <a href="https://code.claude.com/docs/en/permission-modes">permission modes</a>:
+        Manual mode (config value <code>default</code>) asks before most
+        actions; <code>acceptEdits</code> applies file edits without asking;
+        <code>plan</code> blocks edits until you approve a plan;
+        <code>bypassPermissions</code> runs everything without prompts. Two
+        modes sit beside the ladder: <code>auto</code>, the current starting
+        mode for interactive sessions, where a second model reviews actions
+        instead of you; and <code>dontAsk</code>, for locked-down scripts,
+        which denies anything that would prompt. Press <code>Shift+Tab</code>
+        mid-session to cycle modes &mdash; the status bar shows the active
+        one, such as <code>⏸ plan mode on</code>. Start a session in a mode
+        with <code>claude --permission-mode &lt;mode&gt;</code>, or send a
+        single planned prompt by prefixing it with <code>/plan</code>. Mode
+        names and keybindings change between releases. The rungs do not.
+      </p>
+    </aside>
+
+    <h2>The verification rule</h2>
+    <p>
+      One rule governs the whole ladder, and the next lesson is built on it:
+      <strong>more autonomy granted means more verification owed.</strong>
+    </p>
+    <p>
+      Verification does not disappear when the prompts do. It moves.
+      Approval-per-action spreads verification through the session, one small
+      yes at a time. Auto-accepted edits defer it to one sitting: the full
+      diff, reviewed at the end. Unattended operation defers everything
+      &mdash; you owe the session's entire output a review it never got
+      while running. Read the rule as a conservation law: every prompt you
+      turn off becomes review you owe later. A3 teaches how to pay that debt
+      well.
+    </p>
+
+    <h2>Unattended means isolated</h2>
+    <p>
+      The bottom rung gets its own rule: <strong>restrict unattended modes to
+      isolated environments</strong> &mdash; a container, a virtual machine,
+      a sandbox. An unattended agent can run anything, and it can be misled
+      by anything it reads, so the environment must contain whatever it does.
+      Give it no credentials beyond the task. Assume every mistake it can
+      make, it eventually will, with nobody there to say no. Isolation is
+      what makes that assumption survivable.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-15</span>
+      <p>
+        Claude Code's unattended mode is <code>bypassPermissions</code>,
+        started with <code>claude --dangerously-skip-permissions</code>. The
+        <a href="https://code.claude.com/docs/en/permission-modes">official docs</a>
+        scope it to isolated containers and VMs only &mdash; a container, VM,
+        or the sandbox runtime, run as a non-root user. Deny rules you
+        configure still apply in every mode, this one included. The flag name
+        is a warning, not branding.
+      </p>
+    </aside>
+
+    <h2>When the agent is the wrong tool</h2>
+    <p>
+      Some tasks are faster by hand, and handing them over is its own kind of
+      unscoped spend. Two signs:
+    </p>
+    <ul>
+      <li>
+        <strong>Describing costs more than doing.</strong> A one-character
+        typo in the file you are reading, a rename your editor does in one
+        keystroke: by the time the instruction is typed, the edit would be
+        done. Make the edit.
+      </li>
+      <li>
+        <strong>You cannot state the check.</strong> When you cannot say what
+        would prove the work, the agent returns confident output you can
+        neither accept nor reject. That is not a task yet. Scope it first
+        &mdash; or do the thinking yourself, because deciding what you want
+        was the actual work.
+      </li>
+    </ul>
+
+    <h2>Worked example: a planned task, start to finish</h2>
+    <p>
+      The task: a small CLI tool ships a <code>cleanup</code> command that
+      deletes stale export files, and you want a <code>--dry-run</code> flag.
+      You have never read this corner of the code. Apply the test: you cannot
+      name the files, so you plan. The transcript is condensed; the
+      annotations after each excerpt are the lesson.
+    </p>
+    <pre><code>You (read-only planning):
+The cleanup command deletes stale export files. Add a
+--dry-run flag: print every file that would be deleted,
+delete nothing, exit 0. Propose a plan first — name the
+files you would touch, and name the test that proves
+--dry-run deletes nothing.</code></pre>
+    <p>
+      The mode was chosen before the first token, by the naming test. And the
+      prompt still carries A1's three parts: the goal is stated, the check is
+      named up front, and the files &mdash; the part you could not supply
+      &mdash; become the plan's first deliverable.
+    </p>
+    <pre><code>Agent (plan, condensed):
+Read cli.py, commands/cleanup.py, tests/test_cleanup.py,
+scripts/nightly.sh.
+
+1. cli.py — register --dry-run on the cleanup command.
+2. commands/cleanup.py — pass dry_run into delete_stale();
+   when set, print each path and skip the remove call.
+3. tests/test_cleanup.py — new test: run cleanup --dry-run
+   over a temp dir of stale files; assert every file still
+   exists and every path was printed.
+
+Found while reading: scripts/nightly.sh runs cleanup from
+cron with no flags. The default behavior stays unchanged,
+so the nightly job is unaffected.
+
+Out of scope, noting it: delete_stale() also clears a
+cache directory that the help text never mentions. Worth
+a separate task.</code></pre>
+    <p>
+      The plan's value is its two surprises. A cron job calls this command
+      &mdash; checked for the price of a file read instead of a broken
+      nightly run. And the undocumented cache deletion got fenced off as a
+      separate task instead of fixed on the fly: the plan held the scope
+      that a mid-edit discovery would have blurred.
+    </p>
+    <pre><code>You:
+Good. Keep the cache-directory note out of this change.
+Approve the plan — switch to approval-per-action and make
+the edits.</code></pre>
+    <p>
+      One sentence trimmed the scope. That is the cheapest-artifact property
+      in action: the same trim after the fact is a review argument over
+      written code.
+    </p>
+    <pre><code>[Three edits, each approved. Tests run.]
+Agent: 14 passed, including test_dry_run_deletes_nothing.
+Against the fixture, --dry-run prints 3 paths and removes
+none.</code></pre>
+    <p>
+      The session ends where the prompt began: at the named check. Autonomy
+      stayed at approval-per-action, so the verification owed stayed small
+      &mdash; three diffs you had already approved in outline, and one test
+      run. The verification rule, balanced.
+    </p>
+
+    <h2>Keep going</h2>
+    <p>
+      One primary source is worth your next twenty minutes: the official
+      <a href="https://code.claude.com/docs/en/permission-modes">permission-modes reference</a>.
+      It is the current-tool ground truth for the dated callouts above, and
+      its tables show the control-for-flow trade rung by rung.
+    </p>
+    <p>
+      Keep noting questions as you read. When tool access arrives, the agent
+      is your teacher: paste a question in and ask. Until then, the
+      <a href="0001-the-mental-model.html">A1 page</a> and the
+      <a href="0000-where-tokens-actually-go.html">primer</a> are worth a
+      second pass.
+    </p>
+
+    <!-- Quiz: exactly 5 questions. Markup contract documented in assets/quiz.js. -->
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">When is it safe to skip the planning pass?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">When the request takes one short sentence to type</button></li>
+            <li><button type="button" data-option="b">When you can name every file touched and the check</button></li>
+            <li><button type="button" data-option="c">When the deadline leaves no spare time for planning</button></li>
+            <li><button type="button" data-option="d">Never, because every change deserves a written plan</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>When you can name the files and the check, the plan already exists in your head; writing it again is ritual. Request length and urgency measure nothing about scope.</p>
+        </li>
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">Which task earns auto-accepted edits?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">A migration that rewrites production billing records</button></li>
+            <li><button type="button" data-option="b">An edit to the deploy pipeline's credential files</button></li>
+            <li><button type="button" data-option="c">A scratch-branch prototype covered by fast tests</button></li>
+            <li><button type="button" data-option="d">A hotfix in a service that has no tests at all</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Mode follows the risk of the work: a scratch branch under fast tests has a blast radius you can delete. The other three have large or irreversible blast radii and earn more control, not less.</p>
+        </li>
+        <li class="quiz-question" data-correct="d">
+          <p class="quiz-stem">A session ran for an hour with edits auto-accepted, and all tests pass. What does the verification rule say?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The passing test suite settles it, so merge the result</button></li>
+            <li><button type="button" data-option="b">Auto-accepted edits earn a lighter review than normal</button></li>
+            <li><button type="button" data-option="c">Rerun the whole session in read-only planning to confirm</button></li>
+            <li><button type="button" data-option="d">You owe a deeper review than approval-per-action would</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>More autonomy granted means more verification owed. Every prompt you turned off became review deferred to the end — the tests are one check, not the whole payment.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">Where may an unattended mode run?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">In an isolated environment, like a container or a VM</button></li>
+            <li><button type="button" data-option="b">On your own laptop, once the task looks small enough</button></li>
+            <li><button type="button" data-option="c">Anywhere, as long as the full test suite passes after</button></li>
+            <li><button type="button" data-option="d">Wherever you can keep the terminal window in view</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Unattended means nobody is there to say no, and the agent can be misled by anything it reads. The environment is the only boundary left, so the environment must contain whatever the agent does.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">Which task is faster by hand than through the agent?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Explaining the stack trace from last night's failed job</button></li>
+            <li><button type="button" data-option="b">Fixing a one-character typo in the file you are reading</button></li>
+            <li><button type="button" data-option="c">Writing tests for one function's negative-input edge case</button></li>
+            <li><button type="button" data-option="d">Answering how logging works across the whole service</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Describing that edit costs more than making it — by the time the instruction is typed, the fix would be done. The other three are A1's first wins: bounded, checkable, and genuinely cheaper to delegate.</p>
+        </li>
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <!-- Pointer: the optional "apply this to your own work" line. Always last. -->
+    <p class="pointer">Optional: take the prompt you wrote after A1 and give it a rung. Which mode does its risk earn, would you plan first, and what is the one-sentence reason? Keep the answer with the prompt.</p>
+  </main>
+
+  <script>
+// quiz.js — instant-feedback quiz widget. Vanilla JS, no dependencies.
+//
+// Expected markup, one block per lesson:
+//
+//   <section class="quiz" id="quiz">
+//     <h2>Quiz</h2>
+//     <ol class="quiz-questions">
+//       <li class="quiz-question" data-correct="b">
+//         <p class="quiz-stem">Question text?</p>
+//         <ul class="quiz-options">
+//           <li><button type="button" data-option="a">First option</button></li>
+//           <li><button type="button" data-option="b">Second option</button></li>
+//         </ul>
+//         <p class="quiz-feedback" hidden></p>
+//         <p class="quiz-explain" hidden>Why the answer is right.</p>
+//       </li>
+//     </ol>
+//     <p class="quiz-score" hidden></p>
+//   </section>
+//
+// Behavior: the learner clicks one option per question. The widget shows
+// right or wrong at once, reveals the explanation, and locks the question.
+// When every question is answered, the widget shows the score.
+
+(function () {
+  'use strict';
+
+  function answerQuestion(question, button, state) {
+    var correct = question.getAttribute('data-correct');
+    var chosen = button.getAttribute('data-option');
+    var isCorrect = chosen === correct;
+
+    question.querySelectorAll('.quiz-options button').forEach(function (b) {
+      b.disabled = true;
+      if (b.getAttribute('data-option') === correct) {
+        b.classList.add('correct');
+      }
+    });
+    if (!isCorrect) {
+      button.classList.add('incorrect');
+    }
+
+    var feedback = question.querySelector('.quiz-feedback');
+    if (feedback) {
+      feedback.textContent = isCorrect
+        ? 'Correct.'
+        : 'Not quite. The marked option is the answer.';
+      feedback.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+      feedback.hidden = false;
+    }
+
+    var explain = question.querySelector('.quiz-explain');
+    if (explain) {
+      explain.hidden = false;
+    }
+
+    state.answered += 1;
+    if (isCorrect) {
+      state.correct += 1;
+    }
+    if (state.answered === state.total && state.scoreEl) {
+      state.scoreEl.textContent =
+        'Score: ' + state.correct + ' of ' + state.total + '.';
+      state.scoreEl.hidden = false;
+    }
+  }
+
+  function initQuiz(quiz) {
+    var questions = quiz.querySelectorAll('.quiz-question');
+    var state = {
+      total: questions.length,
+      answered: 0,
+      correct: 0,
+      scoreEl: quiz.querySelector('.quiz-score')
+    };
+
+    questions.forEach(function (question) {
+      question.querySelectorAll('.quiz-options button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          answerQuestion(question, button, state);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.quiz').forEach(initQuiz);
+  });
+})();
+</script>
+</body>
+</html>
