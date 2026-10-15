@@ -24,9 +24,10 @@ for f in "${files[@]}"; do
   if grep -Eq '<(script|link|img|iframe|source|video|audio)[^>]*(src|href)="https?://' "$f"; then
     echo "FAIL $f: external resource reference"; ok=0
   fi
-  # After inlining, no local stylesheet or script reference may remain.
-  if grep -Eq '<script[^>]*src=' "$f" || grep -Eq '<link[^>]*rel="stylesheet"[^>]*href=' "$f"; then
-    echo "FAIL $f: non-inlined script or stylesheet reference"; ok=0
+  # After inlining, no local resource reference may remain: no src= on any
+  # element, no href= on any <link>. Anchor links between pages are allowed.
+  if grep -Eq '<(script|img|iframe|source|video|audio|embed|object)[^>]*[[:space:]]src=' "$f" || grep -Eq '<link[^>]*href=' "$f"; then
+    echo "FAIL $f: non-inlined src or link href reference"; ok=0
   fi
   # Lesson pages need a quiz block and a pointer. The index page does not.
   case "$f" in
