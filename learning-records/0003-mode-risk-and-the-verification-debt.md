@@ -1,0 +1,5 @@
+# Modes match risk, and verification is conserved
+
+A2 closed A1's shaky item with the naming test: skip the planning pass when you can name every file the change touches and the check that proves the work. The persona can now place a task on the four-rung mode ladder (read-only planning, approval-per-action, auto-accepted edits, unattended operation), can state the verification rule — more autonomy granted means more verification owed — and knows unattended modes belong in isolated environments. A3 can therefore apply the rule without restating the ladder.
+
+Still shaky on: what "more verification owed" concretely means. The persona can recite the rule but has never paid the debt. Handed an auto-accepted session's diff, the persona would review it like a colleague's PR — skim for style, trust confident claims, let passing tests stand in for the whole payment. A3 opens with a spaced callback to this item and teaches what reviewing agent output actually looks for, security flaws included.
