@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic Coding Fundamentals — Pre-access Core</title>
+  <style>
+/* lesson.css — shared visual language for every lesson page and the index.
+   Inlined into each lesson by scripts/inline.py at generation time. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --accent: #0b5fa5;
+  --border: #d0d0d0;
+  --callout-bg: #f3f7fb;
+  --callout-border: #0b5fa5;
+  --correct: #176b37;
+  --correct-bg: #e8f5ec;
+  --incorrect: #9c2b2b;
+  --incorrect-bg: #faecec;
+  --code-bg: #f4f4f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181b;
+    --fg: #e6e6e6;
+    --muted: #a5a5a5;
+    --accent: #6cb2e8;
+    --border: #3a3f44;
+    --callout-bg: #1c2733;
+    --callout-border: #6cb2e8;
+    --correct: #7fd49a;
+    --correct-bg: #19291e;
+    --incorrect: #e89a9a;
+    --incorrect-bg: #2e1b1b;
+    --code-bg: #22262a;
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--accent); }
+
+code, pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+}
+
+code { padding: 0.1em 0.3em; border-radius: 3px; }
+
+pre {
+  padding: 0.9rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+pre code { padding: 0; background: none; }
+
+.lesson-meta {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Dated callout: the only place for version-sensitive facts.
+   The date slot stays visible so the reader can judge staleness. */
+.dated-callout {
+  border-left: 4px solid var(--callout-border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.dated-callout .callout-date {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+/* Quiz */
+.quiz {
+  border-top: 2px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.quiz-question { margin-bottom: 1.75rem; }
+
+.quiz-stem { font-weight: 600; }
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.quiz-options li { margin: 0.35rem 0; }
+
+.quiz-options button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover:enabled { border-color: var(--accent); }
+
+.quiz-options button:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-options button.correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.quiz-options button.incorrect {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.quiz-feedback { font-weight: 600; }
+
+.quiz-feedback.is-correct { color: var(--correct); }
+
+.quiz-feedback.is-incorrect { color: var(--incorrect); }
+
+.quiz-explain { color: var(--muted); }
+
+.quiz-score {
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* Pointer: the optional "apply this to your own work" line. */
+.pointer {
+  margin-top: 2.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  html { background: #ffffff; color: #000000; }
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  .quiz-options button { border: 1px solid #888888; }
+  .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .pointer { border: 1pt dashed #000000; }
+  a { color: #000000; }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Agentic Coding Fundamentals</h1>
+    <p class="lesson-meta">Pre-access core · v0.1.0 · about one hour total</p>
+  </header>
+
+  <main>
+    <p>
+      This is the pre-access core of an open curriculum on agentic coding.
+      It is built for the working engineer: competent in git and one
+      mainstream language, new to agentic coding tools, short on time. The
+      four lessons below need no tool access, no account, and no network.
+      Each page is self-contained and works offline. Each ends with a
+      five-question instant-feedback quiz.
+    </p>
+    <p>
+      Take the lessons in order. Each one opens where the last one left a
+      question hanging.
+    </p>
+
+    <h2>The lessons</h2>
+    <ol>
+      <li>
+        <a href="lessons/0000-where-tokens-actually-go.html">Where Tokens Actually Go</a>
+        <span class="lesson-meta">· shared primer · about 10 minutes</span><br>
+        The one mechanism under every habit this curriculum teaches: the
+        context window, how it fills, and what a full window does to the
+        model.
+      </li>
+      <li>
+        <a href="lessons/0001-the-mental-model.html">The Mental Model</a>
+        <span class="lesson-meta">· A1 · about 15 minutes</span><br>
+        Small, focused tasks as the highest-leverage habit; the two dials
+        every tool exposes; four safe first tasks and the one property they
+        share.
+      </li>
+      <li>
+        <a href="lessons/0002-scoping-and-modes.html">Scoping and Modes</a>
+        <span class="lesson-meta">· A2 · about 15 minutes</span><br>
+        When to plan before code and when to skip it; the four operating
+        modes and how to match mode to risk; the verification rule.
+      </li>
+      <li>
+        <a href="lessons/0003-reviewing-agent-output.html">Reviewing Agent Output</a>
+        <span class="lesson-meta">· A3 · about 20 minutes</span><br>
+        Why agent output is not a colleague's PR; tests as guardrails; the
+        security review you owe every agent-assisted diff, with a flawed
+        diff to practice on.
+      </li>
+    </ol>
+
+    <h2>What the full curriculum adds</h2>
+    <p>
+      The pre-access core is the start of a larger curriculum. Later
+      releases add the rest, built on the same primer:
+    </p>
+    <ul>
+      <li>
+        <strong>Track A, continued (A4–A6).</strong> Owning your setup and
+        the <code>.claude</code> directory, iteration patterns, and failure
+        modes with recovery &mdash; the lessons you take once you have tool
+        access.
+      </li>
+      <li>
+        <strong>Track B — Efficiency and Setup Ownership.</strong> For
+        engineers already using the tools: audit sessions, context hygiene,
+        right-sizing the model and thinking dials, and packaging a setup
+        worth sharing.
+      </li>
+      <li>
+        <strong>Track C — Structured Autonomy.</strong> An elective on
+        running agents with less supervision: plans and ADRs as durable
+        state, role loops and model routing, and parallel sessions.
+      </li>
+      <li>
+        <strong>A practice repo.</strong> A seeded exercise codebase for
+        the post-access lessons, built from publicly available material.
+      </li>
+    </ul>
+
+    <p>
+      Found a mistake, or a claim that has gone stale? Every
+      version-sensitive fact sits in a dated callout &mdash; check the date
+      before you trust it, and file an issue when the date has aged.
+    </p>
+  </main>
+</body>
+</html>
