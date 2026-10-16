@@ -1,0 +1,5 @@
+# Claims are not evidence, and the security seams are enumerable
+
+A3 closed record 0003's shaky item by replacing the colleague-PR review model with one sentence: claims are not evidence — review what the session did, not what it says it did. The persona can now demand a test that fails on the old code, read agent-written tests first and hardest, scale review depth to the rung granted, and walk the five security seams (credentials in the diff, injection paths, the agent as injection path, architectural shortcuts, generated-code flaw patterns) under the ownership norm. The flawed-diff exercise gave the persona one full rep: five flaws found behind a green suite. The pre-access core ends here; A4 starts tool access.
+
+Still shaky on: how to make the habits stick without retyping them. The persona now carries the scoping rules and the review checklist in their head, and would open every session by restating them by hand — the persona does not yet know a setup can carry them. A4 opens with a spaced callback to this item: the checklist you keep repeating is configuration waiting to be written down.

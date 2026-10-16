@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>0003 · Reviewing Agent Output</title>
+  <style>
+/* lesson.css — shared visual language for every lesson page and the index.
+   Inlined into each lesson by scripts/inline.py at generation time. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --accent: #0b5fa5;
+  --border: #d0d0d0;
+  --callout-bg: #f3f7fb;
+  --callout-border: #0b5fa5;
+  --correct: #176b37;
+  --correct-bg: #e8f5ec;
+  --incorrect: #9c2b2b;
+  --incorrect-bg: #faecec;
+  --code-bg: #f4f4f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181b;
+    --fg: #e6e6e6;
+    --muted: #a5a5a5;
+    --accent: #6cb2e8;
+    --border: #3a3f44;
+    --callout-bg: #1c2733;
+    --callout-border: #6cb2e8;
+    --correct: #7fd49a;
+    --correct-bg: #19291e;
+    --incorrect: #e89a9a;
+    --incorrect-bg: #2e1b1b;
+    --code-bg: #22262a;
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--accent); }
+
+code, pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+}
+
+code { padding: 0.1em 0.3em; border-radius: 3px; }
+
+pre {
+  padding: 0.9rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+pre code { padding: 0; background: none; }
+
+.lesson-meta {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Dated callout: the only place for version-sensitive facts.
+   The date slot stays visible so the reader can judge staleness. */
+.dated-callout {
+  border-left: 4px solid var(--callout-border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.dated-callout .callout-date {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+/* Quiz */
+.quiz {
+  border-top: 2px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.quiz-question { margin-bottom: 1.75rem; }
+
+.quiz-stem { font-weight: 600; }
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.quiz-options li { margin: 0.35rem 0; }
+
+.quiz-options button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover:enabled { border-color: var(--accent); }
+
+.quiz-options button:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-options button.correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.quiz-options button.incorrect {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.quiz-feedback { font-weight: 600; }
+
+.quiz-feedback.is-correct { color: var(--correct); }
+
+.quiz-feedback.is-incorrect { color: var(--incorrect); }
+
+.quiz-explain { color: var(--muted); }
+
+.quiz-score {
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* Pointer: the optional "apply this to your own work" line. */
+.pointer {
+  margin-top: 2.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  html { background: #ffffff; color: #000000; }
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  .quiz-options button { border: 1px solid #888888; }
+  .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .pointer { border: 1pt dashed #000000; }
+  a { color: #000000; }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Reviewing Agent Output</h1>
+    <p class="lesson-meta">Track A · lesson 0003 · about 20 minutes</p>
+  </header>
+
+  <main>
+    <p>
+      <a href="0002-scoping-and-modes.html">A2</a> ended with a conservation
+      law: more autonomy granted means more verification owed. You can recite
+      it. The open question is what paying the debt looks like. Handed the
+      diff from an hour of auto-accepted edits, most engineers reach for the
+      only review model they have &mdash; a colleague's pull request. Skim
+      for style, trust the confident summary, let the green suite settle it.
+      All three habits are reasonable for a colleague and wrong for an agent,
+      and the gap between the two is where the worst agent failures ship.
+      This lesson replaces the model, then walks the review most teams skip:
+      security.
+    </p>
+
+    <h2>Agent output is not a colleague's PR</h2>
+    <p>
+      A colleague's review leans on facts the diff never states. The author
+      understood the change while making it. The author will be there when it
+      breaks. The author's confidence tracks the author's record. None of
+      these hold for agent output, for three mechanical reasons &mdash;
+      properties of how the systems work, not of any one model's quality.
+    </p>
+    <ul>
+      <li>
+        <strong>Fluency is free.</strong> The prose around the code is
+        generated the same way the code is: by producing what plausibly comes
+        next. A confident summary costs the model nothing and tracks
+        correctness weakly. A colleague who writes "verified" staked
+        something. A model that writes "verified" completed a sentence.
+      </li>
+      <li>
+        <strong>The failures are plausible.</strong> Human bugs cluster where
+        the work was hard: the off-by-one, the missed lock. Generated code
+        fails where it reads most natural: an API call with the right shape
+        and the wrong name, a correct solution to a slightly different
+        problem, a guard that checks the wrong condition fluently. Style
+        skimming is tuned to catch human bugs. It is nearly blind to these.
+      </li>
+      <li>
+        <strong>There is no author to calibrate on.</strong> Trust in review
+        is earned across PRs: this person is careful with migrations, sloppy
+        with tests. Every agent session is a new author speaking in the same
+        confident voice. The trust you built last session transfers to the
+        next one without justification.
+      </li>
+    </ul>
+    <p>
+      The replacement model fits in one sentence: <strong>claims are not
+      evidence &mdash; review what the session did, not what it says it
+      did.</strong> Everything below is that sentence applied.
+    </p>
+
+    <h2>Confident nonsense, annotated</h2>
+    <p>
+      Here is the pattern to learn on. The transcript is condensed and
+      synthetic; the voice is not exaggerated.
+    </p>
+    <pre><code>You (auto-accepted edits):
+The nightly export writes report-2026-10-15.csv twice
+after midnight UTC. Fix the filename logic.
+
+Agent:
+Found it. build_filename() in export/naming.py stamps the
+file with datetime.now(), which is local time, so runs just
+after midnight UTC reuse the previous date. I switched it
+to datetime.now(timezone.utc). I also ran the test suite —
+all 28 tests pass — and confirmed the export now names
+files correctly after midnight.</code></pre>
+    <p>
+      Four claims. Walk them with the replacement model.
+    </p>
+    <ul>
+      <li>
+        <strong>"Found it" + the mechanism.</strong> Plausible and checkable
+        &mdash; and plausible is all it is until you look. Reading
+        <code>build_filename()</code> takes a minute. A mechanism that sounds
+        right is the model's specialty, which is exactly why it earns a read,
+        not a nod.
+      </li>
+      <li>
+        <strong>"I ran the test suite &mdash; all 28 tests pass."</strong>
+        Scroll the session. If no test command ran in view, this sentence is
+        prose. A claim of execution with no output under it is the single
+        most common form of confident nonsense.
+      </li>
+      <li>
+        <strong>Even if the suite ran:</strong> those 28 tests passed before
+        the change too. A suite that never caught the bug cannot confirm the
+        fix. The only receipt is a new test that fails on the old code and
+        passes on the new &mdash; and this diff added no test.
+      </li>
+      <li>
+        <strong>"Confirmed the export now names files correctly after
+        midnight."</strong> Confirmed how? The job runs nightly; the session
+        is minutes old. The sentence cannot be true from inside the session.
+        It is filler wearing the grammar of evidence.
+      </li>
+    </ul>
+    <p>
+      Nothing here says the fix is wrong. The mechanism may be exactly right.
+      The point is that after reading the summary you know nothing you can
+      act on &mdash; every claim still needs the same check it needed before
+      the summary was written.
+    </p>
+
+    <h2>Tests are guardrails, not receipts</h2>
+    <p>
+      Tests are the cheapest verification you can own, and the transcript
+      above shows both rules for using them.
+    </p>
+    <ul>
+      <li>
+        <strong>Demand the failing test.</strong> A fix earns trust when the
+        diff contains a test that fails on the old code and passes on the
+        new. Ask for it in the prompt &mdash; it is A1's "name the check"
+        with teeth: "write the failing test first, then fix."
+      </li>
+      <li>
+        <strong>A green suite vouches only for what it covers.</strong>
+        Passing tests are an answer to one question &mdash; did covered
+        behavior regress? &mdash; and reviewers quietly let them answer
+        every question.
+      </li>
+      <li>
+        <strong>Review agent-written tests hardest.</strong> A guardrail the
+        agent can edit is a guardrail the agent can move. The characteristic
+        weaknesses: a test that asserts nothing that can fail, a test that
+        asserts the mock instead of the behavior, an existing test rewritten
+        to match broken output, a failing test skipped or deleted. Read the
+        <code>tests/</code> hunks of the diff first, not last.
+      </li>
+    </ul>
+
+    <h2>Scale the review to the autonomy</h2>
+    <p>
+      The verification rule sets the depth. Rung by rung on A2's ladder:
+    </p>
+    <ul>
+      <li>
+        <strong>Approval-per-action.</strong> You reviewed in flight, one yes
+        at a time. The final pass is light: read the whole diff once for
+        coherence &mdash; the thing per-edit approval cannot see.
+      </li>
+      <li>
+        <strong>Auto-accepted edits.</strong> You deferred the whole review
+        to now. Read every hunk as an outside contribution, and re-run the
+        named check yourself. Not "the session says tests pass" &mdash; the
+        suite runs where you can see it.
+      </li>
+      <li>
+        <strong>Unattended operation.</strong> Everything above, plus
+        provenance: read the session log for what the agent read and ran. A
+        session that touched untrusted content may not have been working for
+        you the whole time &mdash; the next section says why.
+      </li>
+    </ul>
+
+    <h2>Security: the review you owe every time</h2>
+    <p>
+      Security is where the colleague model does its worst damage, because
+      the flaws that matter are the ones a style skim calls fine. This
+      section is the checklist. It is short enough to run on every
+      agent-assisted diff, and the exercise after it makes you run it once
+      here.
+    </p>
+
+    <h3>Credential handling</h3>
+    <p>
+      Secrets leak into diffs in three places. A hardcoded value or a
+      "temporary" fallback &mdash; a default token, a dev password &mdash;
+      ships a working credential in source. A log line that prints a token,
+      a session ID, or a password writes secrets to wherever logs go, which
+      is always somewhere broader than you think. And a config file committed
+      "to make it run" carries whatever was in it. The rule that catches all
+      three: <strong>a secret never belongs in a diff.</strong> Secrets live
+      in the environment or a secret manager; the diff may reference them,
+      never contain them.
+    </p>
+
+    <h3>Injection paths</h3>
+    <p>
+      An injection path is a seam where data crosses into code: request text
+      concatenated into a SQL query, a filename interpolated into a shell
+      command, user content rendered into HTML unescaped, a path built from
+      input that can contain <code>..</code>. The review move is mechanical:
+      <strong>trace every value an outsider controls to where it lands.</strong>
+      If it lands inside something that gets executed, parsed, or rendered,
+      the seam must be closed &mdash; parameterized, escaped, or allowlisted
+      &mdash; and the burden of proof is on the diff.
+    </p>
+
+    <h3>The agent is an injection path</h3>
+    <p>
+      One injection path is new with agentic tools: the agent itself. An
+      agent acts on every piece of text it reads &mdash; and an issue
+      comment, a README in a dependency, a web page, a log line can all
+      carry instructions planted for it. This is called prompt injection,
+      and it is why A2 confined unattended runs to isolated environments.
+      For review it adds one habit: <strong>a diff from a session that read
+      untrusted content gets attacker-grade review</strong>, because the
+      author of any given line may not have been you.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-16</span>
+      <p>
+        Claude Code ships layered safeguards against prompt injection, per
+        the official <a href="https://code.claude.com/docs/en/security">security reference</a>:
+        commands that fetch from the web, such as <code>curl</code>, are not
+        auto-approved by default; most web fetches reach the model as a
+        separate summarizing model's answer rather than the raw page; and in
+        Manual mode a Bash command the tool cannot fully analyze prompts
+        even when part of it is allowlisted. The same page keeps the last
+        step human: review suggested commands before approval, avoid piping
+        untrusted content directly to the agent, and use virtual machines
+        when work touches external web services.
+      </p>
+    </aside>
+
+    <h3>Architectural shortcuts</h3>
+    <p>
+      A shortcut is a change that "works" by spending structure: TLS
+      verification disabled to clear a certificate error, an auth check
+      bypassed "for now", a permission broadened until the error goes away,
+      a catch-all handler that swallows the failure instead of fixing it, a
+      debug endpoint left enabled. Shortcuts are the most dangerous class on
+      this page because <strong>every one of them passes tests</strong> &mdash;
+      tests measure function, and shortcuts spend posture. Only a reviewer
+      asking "what did this change weaken?" catches them.
+    </p>
+
+    <h3>The flaw patterns of generated code</h3>
+    <p>
+      Generated code has a characteristic security profile, and knowing it
+      tells you where to look.
+    </p>
+    <ul>
+      <li>
+        <strong>The common pattern, not the safe one.</strong> Models
+        reproduce the most frequent shape of a pattern in public code, and
+        for security-sensitive code the frequent shape is often the
+        vulnerable one: string-built queries, hand-rolled auth, shell
+        commands built by concatenation.
+      </li>
+      <li>
+        <strong>Dated defaults.</strong> Hash functions, TLS versions, and
+        crypto idioms frozen at training time. Anything cryptographic in a
+        generated diff gets checked against current guidance, not accepted
+        as given.
+      </li>
+      <li>
+        <strong>The happy path, validated nowhere.</strong> The prompt named
+        the feature; nothing named the hostile input. Generated code
+        implements what was asked and validates what was mentioned.
+      </li>
+      <li>
+        <strong>Widening until it works.</strong> When the requested thing
+        fails, a generated fix often widens something &mdash; a permission,
+        a catch block, a timeout &mdash; because widening makes errors
+        disappear. That is the shortcut pattern above, produced by the retry
+        loop.
+      </li>
+      <li>
+        <strong>Local mimicry.</strong> The model copies the shape of nearby
+        code, flaws included. One vulnerable handler quietly becomes the
+        template for the next.
+      </li>
+    </ul>
+
+    <h3>The ownership norm</h3>
+    <p>
+      One norm closes the section: <strong>you own the code with your name
+      on it.</strong> In code review, in the incident review after, "the
+      agent wrote it" explains nothing and excuses nothing &mdash; the tool
+      has no name to put on the commit, and yours is already there. The norm
+      has a practical edge: if you cannot defend a line, you are not done
+      reviewing it. Delete it, rewrite it, or understand it &mdash; merging
+      it is the one option off the table.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-16</span>
+      <p>
+        Tooling can assist the review it does not replace. In Claude Code,
+        <code>/security-review</code> analyzes the changes on your current
+        branch against origin's default branch for vulnerabilities &mdash;
+        injection, auth issues, data exposure &mdash; and
+        <code>/code-review</code> (alias <code>/review</code>) reviews the
+        current diff or a pull request for correctness bugs, with
+        <code>--fix</code> to apply findings. The
+        <a href="https://code.claude.com/docs/en/security">security docs</a>
+        state the ownership side plainly: you are responsible for reviewing
+        proposed code and commands before approval.
+      </p>
+    </aside>
+
+    <h2>Find the flaws: review this diff</h2>
+    <p>
+      An auto-accepted session was asked: "Add an internal endpoint so
+      support staff can look up a user's profile by email. Protect it with a
+      token and log each lookup for audit." The session produced the
+      condensed diff below, the suite is green, and the endpoint works. By
+      the ladder, this diff owes a full review &mdash; yours. There are five
+      flaws. Count the ones you can defend out loud before you open the
+      walkthrough.
+    </p>
+    <pre><code>--- a/app/db.py
++++ b/app/db.py
+@@ -41,4 +41,9 @@
+ def row_to_json(row):
+     return dict(row)
+
++def find_user_by_email(email):
++    query = f"SELECT * FROM users WHERE email = '{email}'"
++    return connection.execute(query).fetchone()
++
+--- a/app/routes.py
++++ b/app/routes.py
+@@ -1,3 +1,4 @@
++import logging
+ from flask import request
+@@ -88,2 +89,16 @@
++audit = logging.getLogger("audit")
++
++@app.route("/internal/user-lookup")
++def user_lookup():
++    email = request.args.get("email", "")
++    token = request.args.get("token", "")
++    if token != app.config.get("LOOKUP_TOKEN", "dev-lookup-token"):
++        return {"error": "forbidden"}, 403
++    audit.info("lookup email=%s token=%s", email, token)
++    row = find_user_by_email(email)
++    if row is None:
++        return {"error": "not found"}, 404
++    return row_to_json(row)
++
+--- a/tests/test_lookup.py
++++ b/tests/test_lookup.py
+@@ -0,0 +1,8 @@
++def test_lookup_returns_user(client):
++    resp = client.get(
++        "/internal/user-lookup",
++        query_string={"email": "ada@example.com",
++                      "token": "dev-lookup-token"},
++    )
++    assert resp.status_code in (200, 404)</code></pre>
+    <details>
+      <summary>Open the walkthrough (find the five first)</summary>
+      <ol>
+        <li>
+          <strong>SQL injection.</strong> <code>find_user_by_email</code>
+          builds the query with an f-string, so request text enters the
+          query as code: an email of <code>' OR '1'='1</code> returns an
+          arbitrary row, and worse is routine. The seam must be
+          parameterized. The habit that catches it: trace every
+          outsider-controlled value to where it lands.
+        </li>
+        <li>
+          <strong>A shipped credential.</strong> The fallback
+          <code>"dev-lookup-token"</code> is a working secret in source
+          code, live in every deployment where <code>LOOKUP_TOKEN</code> was
+          never set. The habit: a secret never belongs in a diff &mdash;
+          and a default for a secret is the secret.
+        </li>
+        <li>
+          <strong>The audit log leaks the secret.</strong> The
+          <code>audit.info</code> line prints the token on every lookup, so
+          the credential now lives wherever logs are shipped, searched, and
+          retained &mdash; and the token already rides in a GET query
+          string, which web servers log by default. The habit: read every
+          log line for what it prints.
+        </li>
+        <li>
+          <strong><code>SELECT *</code> through to the response.</strong>
+          The row goes straight out via <code>row_to_json</code>, so the
+          endpoint returns every column the <code>users</code> table holds
+          &mdash; password hash, reset tokens, whatever ships next quarter.
+          The prompt said "profile"; the code returns the table. The habit:
+          review what the change returns, not what the request asked for.
+        </li>
+        <li>
+          <strong>A test that guards nothing.</strong>
+          <code>assert resp.status_code in (200, 404)</code> passes whether
+          the lookup finds the user or not &mdash; both outcomes are inside
+          the assertion. The suite is green and vouches for nothing. The
+          habit: review agent-written tests hardest, and read
+          <code>tests/</code> hunks first.
+        </li>
+      </ol>
+      <p>
+        Note what just happened: the endpoint works, the suite passes, and
+        a style skim finds clean, idiomatic code. The colleague-PR review
+        approves this diff. The checklist fails it five times.
+      </p>
+    </details>
+
+    <h2>Keep going</h2>
+    <p>
+      One primary source is worth your next twenty minutes: the official
+      <a href="https://code.claude.com/docs/en/security">Claude Code security
+      reference</a>. It is the ground truth behind this lesson's callouts,
+      and its "working with untrusted content" practices are the prompt-injection
+      section in operational form.
+    </p>
+    <p>
+      Keep noting questions as you read. When tool access arrives, the agent
+      is your teacher: paste a question in and ask. Until then, the
+      <a href="0002-scoping-and-modes.html">A2 page</a> holds the mode
+      ladder this lesson's review depths hang on, and the
+      <a href="0000-where-tokens-actually-go.html">primer</a> and
+      <a href="0001-the-mental-model.html">A1</a> are worth a second pass
+      &mdash; the pre-access core ends here.
+    </p>
+
+    <!-- Quiz: exactly 5 questions. Markup contract documented in assets/quiz.js. -->
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">A session ends: "Found the race condition and fixed it. Verified, and all tests pass." What earns the claim your trust?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The agent names the root cause in confident, specific detail</button></li>
+            <li><button type="button" data-option="b">A new test in the diff that fails on the old code</button></li>
+            <li><button type="button" data-option="c">The test suite showing green at the end of the session</button></li>
+            <li><button type="button" data-option="d">The explanation matching your own earlier guess about the bug</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Claims are not evidence. Confidence is free, a suite that never caught the bug confirms nothing, and agreement with your guess proves the guess was plausible. The only receipt is a check that fails without the fix.</p>
+        </li>
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">Two sessions each produce a sixty-line diff. Which diff owes the deepest review?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Approval-per-action, where you said yes to each edit in flight</button></li>
+            <li><button type="button" data-option="b">Auto-accepted edits on a scratch branch covered by fast tests</button></li>
+            <li><button type="button" data-option="c">An unattended run that read pages from an external bug tracker</button></li>
+            <li><button type="button" data-option="d">Auto-accepted edits that finished with the whole suite green</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Unattended operation deferred every check to now, and reading untrusted content adds the prompt-injection case: some of the diff may answer to an attacker's instructions. That combination earns attacker-grade review — the green suite changes nothing it does not cover.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">An agent-written test asserts <code>resp.status_code in (200, 404)</code> and nothing else. What is wrong with it?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The test should also accept 403 for requests without a token</button></li>
+            <li><button type="button" data-option="b">It passes whether the lookup works or fails, so it guards nothing</button></li>
+            <li><button type="button" data-option="c">Status codes change between framework releases, so the pin is brittle</button></li>
+            <li><button type="button" data-option="d">The assertion belongs in a fixture shared across the test module</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Both outcomes of the behavior under test sit inside the assertion, so no failure of the lookup can ever fail the test. A guardrail that cannot move is no guardrail — which is why agent-written tests get the hardest read in the diff.</p>
+        </li>
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">A diff contains <code>query = f"SELECT * FROM users WHERE email = '{email}'"</code>. What makes this line an injection path?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The query scans the users table without an index on email</button></li>
+            <li><button type="button" data-option="b">The email is never lowercased, so mixed-case lookups miss rows</button></li>
+            <li><button type="button" data-option="c">Request text enters the query as code, so crafted input becomes SQL</button></li>
+            <li><button type="button" data-option="d">String formatting runs slower than the driver's parameter binding</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>An injection path is a seam where outsider-controlled data crosses into code. The f-string splices request text into the SQL itself, so input like <code>' OR '1'='1</code> rewrites the query. Parameterize the seam; the other options are at most performance or correctness quibbles.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">A diff reads a token with <code>config.get("LOOKUP_TOKEN", "dev-lookup-token")</code>. Why does the fallback fail review?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Dictionary lookups with defaults cost more than direct key access</button></li>
+            <li><button type="button" data-option="b">It ships a working credential in source, live wherever config is unset</button></li>
+            <li><button type="button" data-option="c">The default string is too short to serve as a secure token</button></li>
+            <li><button type="button" data-option="d">Default values belong in a constants module, not inline at the call</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>A default for a secret is the secret: every deployment that never sets the variable runs with a token that is printed in the source code. A secret never belongs in a diff — the code may reference one, never contain one.</p>
+        </li>
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <!-- Pointer: the optional "apply this to your own work" line. Always last. -->
+    <p class="pointer">Optional: open your team's last AI-assisted PR and review it with this lesson's checklist — evidence behind every claim, a test that fails on the old code, the credential and injection seams, what the change weakened, and your name on the result.</p>
+  </main>
+
+  <script>
+// quiz.js — instant-feedback quiz widget. Vanilla JS, no dependencies.
+//
+// Expected markup, one block per lesson:
+//
+//   <section class="quiz" id="quiz">
+//     <h2>Quiz</h2>
+//     <ol class="quiz-questions">
+//       <li class="quiz-question" data-correct="b">
+//         <p class="quiz-stem">Question text?</p>
+//         <ul class="quiz-options">
+//           <li><button type="button" data-option="a">First option</button></li>
+//           <li><button type="button" data-option="b">Second option</button></li>
+//         </ul>
+//         <p class="quiz-feedback" hidden></p>
+//         <p class="quiz-explain" hidden>Why the answer is right.</p>
+//       </li>
+//     </ol>
+//     <p class="quiz-score" hidden></p>
+//   </section>
+//
+// Behavior: the learner clicks one option per question. The widget shows
+// right or wrong at once, reveals the explanation, and locks the question.
+// When every question is answered, the widget shows the score.
+
+(function () {
+  'use strict';
+
+  function answerQuestion(question, button, state) {
+    var correct = question.getAttribute('data-correct');
+    var chosen = button.getAttribute('data-option');
+    var isCorrect = chosen === correct;
+
+    question.querySelectorAll('.quiz-options button').forEach(function (b) {
+      b.disabled = true;
+      if (b.getAttribute('data-option') === correct) {
+        b.classList.add('correct');
+      }
+    });
+    if (!isCorrect) {
+      button.classList.add('incorrect');
+    }
+
+    var feedback = question.querySelector('.quiz-feedback');
+    if (feedback) {
+      feedback.textContent = isCorrect
+        ? 'Correct.'
+        : 'Not quite. The marked option is the answer.';
+      feedback.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+      feedback.hidden = false;
+    }
+
+    var explain = question.querySelector('.quiz-explain');
+    if (explain) {
+      explain.hidden = false;
+    }
+
+    state.answered += 1;
+    if (isCorrect) {
+      state.correct += 1;
+    }
+    if (state.answered === state.total && state.scoreEl) {
+      state.scoreEl.textContent =
+        'Score: ' + state.correct + ' of ' + state.total + '.';
+      state.scoreEl.hidden = false;
+    }
+  }
+
+  function initQuiz(quiz) {
+    var questions = quiz.querySelectorAll('.quiz-question');
+    var state = {
+      total: questions.length,
+      answered: 0,
+      correct: 0,
+      scoreEl: quiz.querySelector('.quiz-score')
+    };
+
+    questions.forEach(function (question) {
+      question.querySelectorAll('.quiz-options button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          answerQuestion(question, button, state);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.quiz').forEach(initQuiz);
+  });
+})();
+</script>
+</body>
+</html>
