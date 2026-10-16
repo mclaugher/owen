@@ -1,8 +1,14 @@
+ALL TASKS COMPLETE 2026-10-16
+
 ## Summary
 
 (empty — housekeeping compacts old entries into this section)
 
 ## Entries
+
+Task 8: Site index, QA pass, changelog [done] — 2026-10-16
+Added `docs/index.html` (built through the same inline.py pipeline as the lessons, so it shares lesson.css verbatim; no quiz/pointer, which check.sh permits for non-lesson pages), the QA report at `review/QA-v0.1.0.md` with every checklist item passing, and the v0.1.0 CHANGELOG entry. QA ran check.sh plus a headless-Chrome harness (file:// loads, console capture, all-correct and all-wrong quiz runs — every quiz scores 5/5 and 0/5 correctly, zero console errors). Two fixes applied in-pass, logged as D30: the D27-flagged primer sentence corrected (the whole current lineup, small tier included, is 1M tokens; only some older models are 200k; callout re-verified and re-dated 2026-10-16) and lesson-meta time labels aligned to measured estimates (10/15/15/20 min, core = 60; labels previously summed to 75 against the one-hour promise). Remaining for release (outside any PLAN task): merge, enable GitHub Pages from docs/ on main, and tag v1.0.0 for the AI Week proposal (CHANGELOG/QA use v0.1.0 per PLAN).
+Files touched: docs/index.html, docs/lessons/0000-where-tokens-actually-go.html, docs/lessons/0001-the-mental-model.html, docs/lessons/0002-scoping-and-modes.html, review/QA-v0.1.0.md, CHANGELOG.md, DECISIONS.md, PROGRESS.md
 
 Task 7: Generate A3 — Reviewing agent output, and security [done] — 2026-10-16
 Generated `docs/lessons/0003-reviewing-agent-output.html` with the teach-curriculum build steps (template + quiz.js, inlined, draft deleted; check.sh passes on the lesson and on all docs). The lesson opens with the spaced callback to record 0003's shaky item and resolves it by replacing the colleague-PR review model with "claims are not evidence"; the spine covers an annotated confident-nonsense transcript, tests-as-guardrails, review depth per mode rung, and the named full security section (credentials, injection paths, prompt injection, architectural shortcuts, generated-code flaw patterns, ownership norm). The embedded flawed diff plants five flaws — four security-class plus one weakened test — with the walkthrough in a native `<details>` element; quiz questions 4 and 5 are security per D5. Two dated callouts verified 2026-10-16 against the official security and commands docs (logged as D29). Gotchas for task 8: the collapsed `<details>` walkthrough does not print (accepted in D29 — note it in the QA report, not a bug); D27's flag still stands — re-verify the primer callout's "older Claude models have 200,000 tokens" sentence during QA; record 0004's shaky item targets A4, which is outside v0.1.0.
