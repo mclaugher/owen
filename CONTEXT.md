@@ -15,7 +15,8 @@ One term for one thing. Use these terms in every document and lesson.
 - **Learning record** — the Markdown record written after a lesson is generated. It carries one "still shaky on X" item that drives a spaced callback in the next lesson.
 - **Persona** — the Markdown learner profile the fork reads in place of a live interview.
 - **teach-curriculum** — the fork of the vendored teach skill. It generates one lesson per invocation in CURRICULUM.md order.
-- **Practice repo** — the seeded exercise codebase for post-access lessons. Built from publicly available material only. Not part of v0.1.0.
+- **Practice folder** — the small set of files a post-access lesson hands the learner. The lesson page packs the files inside itself. A download button saves them; copy-paste blocks are the fallback. Re-downloading resets the exercise. Built from publicly available material only. Supersedes "practice repo" for Track A (D32).
+- **Suggested experience** — the short list of skills the course assumes: terminal, git basics, reading code in one language, an editor. The course index states the list up front. The list is framed as "you will get the most out of this course if", never as a gate.
 - **Capstone** — the standard end-of-track task. Its result compares against a published baseline range.
 - **Baseline range** — the published token range for a capstone, recorded with its exercise config and date. Directional once the model lineup changes.
 - **Plugin** — a shareable additive bundle (skills, commands, agents, hooks) a teammate installs on top of their own setup.
