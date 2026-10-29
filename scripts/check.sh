@@ -51,6 +51,59 @@ for f in "${files[@]}"; do
   if [ -n "$num" ] && [ "$num" -ge 4 ]; then
     grep -q 'id="practice-download"' "$f" || { echo "FAIL $f: missing practice download block (run scripts/pack.py)"; ok=0; }
   fi
+  # Plain-language rule (D34): the visible text of a page must use no
+  # word from banned-words.txt. The scan skips scripts, styles,
+  # comments, and attributes — a learner never reads those. A list
+  # entry may allow the word before named next words ("frontier !model"
+  # allows "frontier model" but bans bare "frontier").
+  bwlist="$(dirname "$0")/banned-words.txt"
+  if [ -f "$bwlist" ]; then
+    hits=$(python3 - "$f" "$bwlist" <<'PY'
+import html.parser, re, sys
+
+class Visible(html.parser.HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.skip = 0
+        self.parts = []
+    def handle_starttag(self, tag, attrs):
+        if tag in ("script", "style"):
+            self.skip += 1
+    def handle_endtag(self, tag):
+        if tag in ("script", "style") and self.skip:
+            self.skip -= 1
+    def handle_data(self, data):
+        if not self.skip:
+            self.parts.append(data)
+
+rules = []
+for line in open(sys.argv[2], encoding="utf-8"):
+    line = line.split("#", 1)[0].strip().lower()
+    if not line:
+        continue
+    parts = line.split()
+    rules.append((parts[0], {p[1:] for p in parts[1:] if p.startswith("!")}))
+
+parser = Visible()
+parser.feed(open(sys.argv[1], encoding="utf-8").read())
+tokens = re.findall(r"[a-z]+", " ".join(parser.parts).lower())
+reported = set()
+for i, tok in enumerate(tokens):
+    for word, allowed_next in rules:
+        if tok == word and word not in reported:
+            nxt = tokens[i + 1] if i + 1 < len(tokens) else ""
+            if nxt not in allowed_next:
+                reported.add(word)
+                print(word)
+PY
+)
+    if [ -n "$hits" ]; then
+      while IFS= read -r w; do
+        echo "FAIL $f: banned word in visible text: $w (D34, scripts/banned-words.txt)"
+      done <<< "$hits"
+      ok=0
+    fi
+  fi
   [ "$ok" -eq 1 ] && echo "PASS $f"
   [ "$ok" -eq 0 ] && fail=1
 done
