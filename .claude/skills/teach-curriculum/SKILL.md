@@ -70,14 +70,29 @@ Apply the CURRICULUM.md "Standards for every lesson" section to every lesson. Bu
 
 1. Start from `assets/lesson-template.html`. Fill every slot. Keep the quiz markup contract documented in `assets/quiz.js`.
 2. Write the draft to `docs/lessons/<file>-draft.html`. The template's relative asset paths resolve from that directory.
-3. Run `python3 scripts/inline.py docs/lessons/<file>-draft.html docs/lessons/<file>.html` as the final authoring step.
-4. Delete the draft.
-5. Run `bash scripts/check.sh docs/lessons/<file>.html`. Fix the lesson until the check passes.
-6. Write a learning record to `learning-records/`. Use the format in `vendored-skills/teach/LEARNING-RECORD-FORMAT.md`. End the record with exactly one "still shaky on X" item. Name the one thing the persona would most likely still get wrong. The next lesson opens with a spaced callback to that item.
+3. Pack the practice folder into the draft when the lesson is post-access. Follow the steps in the Post-access rule section. Skip this step for a pre-access lesson.
+4. Run `python3 scripts/inline.py docs/lessons/<file>-draft.html docs/lessons/<file>.html` as the final authoring step.
+5. Delete the draft.
+6. Run `bash scripts/check.sh docs/lessons/<file>.html`. Fix the lesson until the check passes.
+7. Write a learning record to `learning-records/`. Use the format in `vendored-skills/teach/LEARNING-RECORD-FORMAT.md`. End the record with exactly one "still shaky on X" item. Name the one thing the persona would most likely still get wrong. The next lesson opens with a spaced callback to that item.
 
 ### Pre-access rule
 
 Pre-access lessons (0000 through 0003) require zero tool access from the learner. Embed all exercise material inline. Do not ask the learner to run a tool, install anything, or leave the page to complete an exercise.
+
+### Post-access rule
+
+Post-access lessons (0004 and up) give the learner tool access. Each post-access lesson embeds its practice folder behind a download button (D32). Build and pack the folder in these steps:
+
+1. Author the practice folder under `assets/practice/<lesson>/`. `<lesson>` is the lesson file name without `.html`. The learner's download unzips to a folder with that name.
+2. Add a `.seed` suffix to the name of every file a tool reads by name. Write `CLAUDE.md.seed`, not `CLAUDE.md`. The packer restores the real name inside the zip. Why: a build session must never ingest a deliberately bad CLAUDE.md or settings file.
+3. Put the marker comment `<!-- PACK:PRACTICE -->` in the draft where the download block belongs.
+4. Put `<meta name="lesson-number" content="NNNN">` in the draft head, where NNNN is the lesson number. `scripts/check.sh` reads the tag when a file name carries no lesson number.
+5. Run `python3 scripts/pack.py assets/practice/<lesson> docs/lessons/<file>-draft.html docs/lessons/<file>-draft.html`. The command replaces the marker with the download block. Run the command before `scripts/inline.py`.
+6. Name every practice file in the exercise text. The learner must know which file to open and which file to change.
+7. Solve the exercise end to end before you call the lesson done. Record the solve in the PR body.
+
+Use copy-paste blocks in place of the download button when the lesson ships one or two tiny files (D32).
 
 ## Assets
 
