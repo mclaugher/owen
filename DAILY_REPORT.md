@@ -1,32 +1,29 @@
-# Daily report — 2026-10-16
+# Daily report — 2026-10-29
 
-## Merged since yesterday
+## Merged since the last report (2026-10-16)
 
-All six PRs merged on 2026-10-15. Tasks 1–6 of PLAN.md are done.
+| PR | Merged | Title | Plan task |
+|----|--------|-------|-----------|
+| #8 | 2026-10-16 | feat: generate A3 reviewing-agent-output lesson 0003 | old plan, task 7 |
+| #9 | 2026-10-16 | Task 8: Site index, QA pass, changelog | old plan, task 8 |
+| #10 | 2026-10-28 | plan: Track A applied phase (lessons 4–7) | plan replacement (human design session) |
 
-| PR | Task | Title |
-|----|------|-------|
-| #1 | 1 | chore: vendor teach skill v1.3.1 |
-| #2 | 2 | feat: lesson template, quiz widget, inliner |
-| #3 | 3 | feat: fork teach into teach-curriculum |
-| #4 | 4 | feat: generate shared primer lesson 0000 |
-| #5 | 5 | feat: generate A1 mental-model lesson 0001 |
-| #6 | 6 | feat: generate A2 scoping-and-modes lesson 0002 |
+v0.1.0 is complete. PR #10 installed the new PLAN.md (tasks 1–8 toward lessons 0004–0007), decisions D31–D36, six new review-guideline lines, and archived the v0.1.0 ledger to `review/PROGRESS-v0.1.0.md`.
 
 ## Open PRs awaiting human merge
 
-None, besides this housekeeping PR.
+None besides this housekeeping PR.
 
 ## Blocked tasks
 
-None. Tasks 7 (A3 — reviewing agent output, security) and 8 (site index, QA pass, changelog) remain. Both are unblocked; task 7 is next.
+None. No task in the new plan has started. Task 1 (practice-folder packer) is next and unblocked.
 
 ## Guideline additions from the review loop
 
-One, from the PR #4 review (commit eb180c6): "A dated-callout claim that the cited page contradicts for any current model is a rejection. Check each tier-level claim against the sizes-by-model table." The same review also produced a content fix (a6fefe6) that corrected the primer's 200k-window claim before merge.
+None since the last report. REVIEW_GUIDELINES.md gained six lines on 2026-10-28, but they came from the design-session plan PR (#10), not the review loop: the packed download block on post-access pages (D32), the `.seed` suffix rule, the banned-word and define-on-first-use checks (D34), exercises must name their practice files, no token ranges or learner comparisons in Track A (D33), and lesson PR bodies must record the solved exercise.
 
 ## Look at first
 
-1. **D27 QA flag.** The models-overview page now shows a 1M window for every current model. The primer callout's sentence "older Claude models have 200,000 tokens" may read as too broad. Task 8 QA must re-verify it. The flag is logged in DECISIONS.md (D27) and in the task 5 PROGRESS entry.
-2. **Mode-system drift risk.** D28 notes the current Claude Code mode set (`auto` as the interactive default, `dontAsk`) no longer maps one-to-one onto the lesson's four-rung ladder. The A2 callouts handle it today; task 8 QA should re-check the docs pages before tagging v0.1.0.
-3. **No release tag yet.** The plan targets a tagged v0.1.0 after task 8. Two tasks stand between here and the tag.
+1. **v0.1.0 release steps are still open.** The repo has no GitHub Pages site (the API returns 404) and no tags. The v0.1.0 ledger listed "enable GitHub Pages from docs/ on main, tag the release" as the remaining human steps.
+2. **PROGRESS.md was reset without compaction.** PR #10 archived the old ledger but left the Summary empty. This housekeeping pass rolled the still-binding v0.1.0 notes (inliner draft rule, 1M-window fact, print caveat, open release steps) into the Summary so dev sessions keep them.
+3. **The dev loop has not started the applied phase.** The plan merged the evening of 2026-10-28; there are no task commits since.
