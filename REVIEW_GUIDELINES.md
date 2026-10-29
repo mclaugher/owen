@@ -14,3 +14,9 @@ The review loop reads this file before every review and appends lessons here.
 - Example material that is not publicly available is a rejection.
 - A deviation from CURRICULUM.md or the vendored skill with no DECISIONS.md entry is a rejection.
 - A dated-callout claim that the cited page contradicts for any current model is a rejection. Check each tier-level claim against the sizes-by-model table.
+- A post-access lesson page (0004 and later) without the packed practice-folder download block is a rejection (D32).
+- A file a tool reads by name (CLAUDE.md, settings files) sitting live under `assets/practice/` is a rejection. Sources carry the `.seed` suffix.
+- A lesson whose text contains a word from `scripts/banned-words.txt` is a rejection. An industry term used before the lesson defines it is a rejection (D34).
+- An exercise that does not name its practice files is a rejection.
+- A published expected token range, or any learner-versus-anyone comparison, in a Track A lesson is a rejection (D33).
+- A PR for a lesson task whose body does not record the solved exercise is a rejection.

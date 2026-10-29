@@ -10,18 +10,19 @@ Read CONTEXT.md first. Use its terms. Generate lessons in this order, one per in
 | 1 | `0001-the-mental-model` | A1 — Mental model | Specified below |
 | 2 | `0002-scoping-and-modes` | A2 — Scoping, plan-before-code, modes | Specified below |
 | 3 | `0003-reviewing-agent-output` | A3 — Reviewing output and security | Specified below |
-| 4 | `0004-own-your-setup-1` | A4 — The .claude directory | Outline only; spec before generation |
-| 5 | `0005-iteration-patterns` | A5 — Iteration patterns | Outline only |
-| 6 | `0006-failure-and-recovery` | A6 — Failure modes, recovery, first audit | Outline only |
-| 7 | `0007-audit-sessions` | B1 — Audit sessions (keystone) | Outline only |
-| 8 | `0008-context-hygiene` | B2 — Context hygiene | Outline only |
-| 9 | `0009-the-two-dials` | B3 — Right-sizing: model and thinking | Outline only |
-| 10 | `0010-own-your-setup-2` | B4 — Setup ownership and sharing | Outline only |
-| 11 | `0011-durable-state` | C1 — Plans and ADRs as durable state | Outline only |
-| 12 | `0012-role-loops-and-routing` | C2 — Role loops and model routing | Outline only |
-| 13 | `0013-parallel-sessions` | C3 — Parallel sessions | Outline only |
+| 4 | `0004-first-win-and-your-setup` | A4 — First win, then make it yours | Specified below |
+| 5 | `0005-guardrails-and-add-ons` | A5 — Guardrails and add-ons | Specified below |
+| 6 | `0006-small-sessions` | A6 — Small sessions | Specified below |
+| 7 | `0007-when-things-go-wrong` | A7 — When things go wrong, and what it cost | Specified below |
+| 8 | `0008-audit-sessions` | B1 — Audit sessions (keystone) | Outline only |
+| 9 | `0009-context-hygiene` | B2 — Context hygiene | Outline only |
+| 10 | `0010-the-two-dials` | B3 — Right-sizing: model and thinking | Outline only |
+| 11 | `0011-own-your-setup-2` | B4 — Setup ownership and sharing | Outline only |
+| 12 | `0012-durable-state` | C1 — Plans and ADRs as durable state | Outline only |
+| 13 | `0013-role-loops-and-routing` | C2 — Role loops and model routing | Outline only |
+| 14 | `0014-parallel-sessions` | C3 — Parallel sessions | Outline only |
 
-v0.1.0 ships lessons 0–3 (the pre-access core). Lessons 4–13 wait for their build cycle.
+v0.1.0 shipped lessons 0–3 (the pre-access core). Lessons 4–7 are the applied phase of Track A (D36); they build next. Lessons 8–14 wait for their build cycle.
 
 ## Standards for every lesson
 
@@ -34,6 +35,8 @@ v0.1.0 ships lessons 0–3 (the pre-access core). Lessons 4–13 wait for their 
 - Read the latest learning record first. Open with one spaced callback to the prior lesson's shaky item (primer excepted).
 - Build every example from publicly available material.
 - Pre-access lessons (0–3) require zero tool access. Embed all exercise material inline.
+- Post-access lessons (4 and later) hand the learner a practice folder packed inside the page (D32). A download button saves the folder. Use copy-paste blocks as the fallback for one or two tiny files. Re-downloading resets the exercise. The exercise names each practice file by name.
+- Define every industry term in ordinary words on first use (D34). Use no word from the banned-word list at `scripts/banned-words.txt` in lesson text.
 
 ## Lesson 0000 — Where Tokens Actually Go (shared primer)
 
@@ -78,3 +81,42 @@ Teach the core mental model.
 - Embed a deliberately flawed code change as a static diff. Plant several defects. Include at least one security-class flaw. The lesson walks the review; the learner finds the flaws first.
 - Two of the five quiz questions cover security.
 - The pointer: review your team's last AI-assisted PR with this checklist.
+
+## Lesson 0004 — A4: First win, then make it yours
+
+- Open with the spaced callback to record 0004's shaky item: the checklist you keep retyping is configuration waiting to be written down.
+- Run the first win before any teaching. The practice folder holds a small Python program with one planted bug that crashes with a clear error message. The learner downloads the folder, runs the program, hands Claude Code the error, and verifies the fix. Ten minutes. This is the learner's first real session.
+- Teach CLAUDE.md: the file every session reads first. What belongs: the rules and checks you would otherwise retype. What does not: bloat, which costs tokens in every session. Tie the cost back to the primer.
+- Teach permission settings through three example setups the learner reads and adapts: cautious, balanced, and hands-off-with-guardrails. Match the setup to the risk of the work, tying back to A2's verification rule. State that hands-off requires an isolated workspace.
+- Exercise: the practice folder's CLAUDE.md is deliberately bloated. Trim it. Then write your own permission settings and state why you chose that setup.
+- The quiz tests judgment (what belongs in CLAUDE.md, which setup fits which situation), not syntax.
+- Put file names, settings syntax, and commands in dated callouts.
+- The pointer: write a CLAUDE.md and permission settings for your own repo.
+
+## Lesson 0005 — A5: Guardrails and add-ons
+
+- This lesson carries full weight (D36): both halves teach, and both halves practice.
+- Teach guardrails: a guardrail is a rule the tool enforces automatically, with no model judgment involved. State when a guardrail beats an instruction: use a guardrail for anything that must never happen.
+- Walk one worked example through its full loop. The practice folder has a failing test. The learner adds the guardrail that blocks Claude Code from declaring work done while the test fails. The learner watches the block fire, fixes the test, and watches the work complete.
+- Teach add-ons (skills): packaged instructions that load only when needed. Loading on demand beats loading everything always; tie the cost back to the primer. Teach judging add-ons one at a time, never adopting bundles wholesale.
+- Exercise, two parts: add the guardrail to the practice folder; then install one skill from a public collection and answer three questions — what it loads, when it loads, and whether it earns its place.
+- Put event names, file locations, and install commands in dated callouts.
+- The pointer: add one guardrail your team's rules already imply to your own repo.
+
+## Lesson 0006 — A6: Small sessions
+
+- Teach three habits: start a fresh session for each task; write the plan into a file so the next session picks it up; use git commits as save points.
+- Add one paragraph, no exercise: Claude Code can send out a helper to do research so the main session stays small. Name the idea; depth comes in a later course.
+- Exercise: the practice folder holds a task sized for planning. Session one produces a plan file and nothing else. Session two starts fresh, reads the plan file, and does the work.
+- Put session commands and resume specifics in dated callouts.
+- The pointer: split your next real task into a plan session and a work session.
+
+## Lesson 0007 — A7: When things go wrong, and what it cost
+
+- Teach the warning signs of a session gone bad: the session forgets earlier instructions, repeats itself, or states wrong things with confidence. Tie back to A3: claims are not evidence.
+- Teach the restart rule: restarting with a better brief is usually cheaper than arguing with a long session. Re-downloading the practice folder is the reset.
+- Teach the cost view: how to open it, and how to read where the tokens went.
+- Final exercise — the course finale, and it uses every habit: build one small feature in the practice folder start to finish. Plan it first (A2). Keep it small (A1). Verify the result (A3). Then open the cost view and answer three questions about where the tokens went. Publish no expected range; compare against nobody (D33).
+- Close the course in two lines: what the learner can now do, and what the efficiency course adds.
+- Put cost-view commands in dated callouts.
+- The pointer: take the same look at your next real session.
