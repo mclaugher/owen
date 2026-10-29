@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!-- banned-word-lesson.html — test fixture for the check.sh banned-word
+     rule (D34). The visible text below uses "capstone" and "frontier"
+     as a bare noun: check.sh must FAIL this file for both words. The
+     script block mentions provenance, and the phrase "frontier model"
+     appears: check.sh must not flag either, because the scan reads
+     visible text only and "frontier" allows "model" as the next word.
+     Not a real lesson. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Banned-word — Fixture Lesson</title>
+</head>
+<body>
+  <header>
+    <h1>Banned-word fixture lesson</h1>
+    <p class="lesson-meta">Fixture · about 5 minutes</p>
+  </header>
+
+  <main>
+    <p>This capstone pushes past the frontier. A frontier model is fine to name by tier.</p>
+    <script>
+      // The word provenance in a script is not visible text.
+      var ok = true;
+    </script>
+    <p class="pointer">Pointer: none — fixture only.</p>
+  </main>
+</body>
+</html>

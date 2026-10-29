@@ -1,0 +1,40 @@
+# banned-words.txt — words banned from lesson text (D34).
+# These are insider words with no industry standing. A genuine industry
+# term (token, context window) stays welcome once a lesson defines it.
+#
+# Format: one lowercase word per line. "#" starts a comment. A word may
+# carry exceptions: "!next" allows the word when the next word matches.
+# Example: "frontier !model" allows "frontier model".
+# scripts/check.sh scans the visible text of each page against this list.
+
+# Seeded by D34
+orchestration
+orchestrations
+orchestrate
+orchestrates
+orchestrated
+orchestrating
+orchestrator
+orchestrators
+provenance
+capstone
+capstones
+persona
+personas
+# "frontier" is a tier word (CONTEXT.md). As a bare noun it is banned.
+# Before "model" or "tier" it is allowed.
+frontier !model !models !tier !tiers
+
+# Peers judged insider-only (this build, 2026-10-29)
+affordance
+affordances
+ideate
+ideation
+operationalize
+operationalized
+paradigm
+paradigms
+synergy
+synergies
+learnings
+performant
