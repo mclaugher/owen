@@ -36,6 +36,21 @@ for f in "${files[@]}"; do
       grep -Eqi 'class="pointer"|id="pointer"' "$f" || { echo "FAIL $f: missing pointer"; ok=0; }
       ;;
   esac
+  # Post-access lessons (number 0004 and up) must embed their practice
+  # folder behind a download block (D32). scripts/pack.py inserts the
+  # block. The lesson number comes from the file name (NNNN-*.html) or,
+  # when the name carries no number, from the lesson-number meta tag.
+  num=""
+  base=$(basename "$f")
+  case "$base" in
+    [0-9][0-9][0-9][0-9]-*) num=${base%%-*} ;;
+  esac
+  if [ -z "$num" ]; then
+    num=$(grep -Eo '<meta name="lesson-number" content="[0-9]{4}"' "$f" | grep -Eo '[0-9]{4}' | head -n 1) || true
+  fi
+  if [ -n "$num" ] && [ "$num" -ge 4 ]; then
+    grep -q 'id="practice-download"' "$f" || { echo "FAIL $f: missing practice download block (run scripts/pack.py)"; ok=0; }
+  fi
   [ "$ok" -eq 1 ] && echo "PASS $f"
   [ "$ok" -eq 0 ] && fail=1
 done

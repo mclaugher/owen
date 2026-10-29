@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- post-access-lesson.html — test fixture for scripts/pack.py and the
+     check.sh download-block rule. Models a post-access lesson (0004+)
+     before packing: it carries the lesson-number meta and the PACK
+     marker but no download block. check.sh must FAIL this file and
+     PASS the packed output. Not a real lesson. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="lesson-number" content="0004">
+  <title>Post-access — Fixture Lesson</title>
+</head>
+<body>
+  <header>
+    <h1>Post-access fixture lesson</h1>
+    <p class="lesson-meta">Fixture · about 5 minutes</p>
+  </header>
+
+  <main>
+    <p>This page tests the practice-folder packer. The marker below becomes the download block at pack time.</p>
+
+    <!-- PACK:PRACTICE -->
+
+    <p class="pointer">Pointer: none — fixture only.</p>
+  </main>
+</body>
+</html>
