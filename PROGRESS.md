@@ -11,4 +11,8 @@ v0.1.0 (lessons 0000–0003 plus the site index) shipped 2026-10-16. The full le
 
 ## Entries
 
-(none yet — the applied-phase plan merged 2026-10-28; dev sessions append entries here, newest first, each starting `Task <N>: <title> [done|blocked]`)
+(newest first, each starting `Task <N>: <title> [done|blocked]`)
+
+Task 1: Practice-folder packer [done]
+`scripts/pack.py` (stdlib only) zips a practice folder, strips a trailing `.seed` from each file name, and replaces the marker comment `<!-- PACK:PRACTICE -->` in the lesson page with a download block (`id="practice-download"`) whose button rebuilds the zip from embedded base64 — offline-safe from `file://`. Authors of lessons 0004+ must put that marker in the draft page and a `<meta name="lesson-number" content="NNNN">` tag in the head: `check.sh` requires the download block on any page whose file name starts `NNNN-` with NNNN ≥ 0004, or whose head carries that meta tag (the meta covers packed output with arbitrary file names). The zip uses a fixed timestamp, so repacking an unchanged folder changes nothing. Gotcha for the next session: run pack.py on the draft (it needs the marker), and note `scripts/fixtures/post-access-lesson.html` fails `check.sh` by design — like `sample-lesson.html`, never add fixtures to a default check run.
+Files touched: `scripts/pack.py`, `scripts/check.sh`, `scripts/fixtures/post-access-lesson.html`, `scripts/fixtures/practice-sample/` (README.md, CLAUDE.md.seed, src/greet.py), `PROGRESS.md`.
