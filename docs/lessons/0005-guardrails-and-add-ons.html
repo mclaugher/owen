@@ -482,10 +482,14 @@ pre code { padding: 0; background: none; }
         Anthropic's official marketplace,
         <code>claude-plugins-official</code>, is added automatically the
         first time you start an interactive terminal session. Run
-        <code>/plugin</code> to browse it &mdash; the Discover tab shows
-        a context-cost estimate <em>before</em> you install &mdash; and
-        install one with
+        <code>/plugin</code> to browse it, and install one with
         <code>/plugin install &lt;name&gt;@claude-plugins-official</code>.
+        In a session, that command does not install right away: it opens
+        the plugin's details pane so you can review first. The
+        context-cost estimate appears in that pane when you open the
+        plugin by naming its marketplace, as the install command does,
+        or from the Marketplaces tab. The details pane you reach from
+        the Discover list does not show the estimate.
         <code>claude plugin disable &lt;name&gt;</code> turns one off
         without uninstalling. An enabled plugin's skill names and
         descriptions sit in your window on every turn, in every session.
@@ -502,8 +506,10 @@ pre code { padding: 0; background: none; }
         <strong>Browse.</strong> Open the official marketplace from the
         callout above and read descriptions until one names a job you
         actually have &mdash; commit messages, code review, whatever
-        recurs in your week. Note its context-cost estimate before you
-        touch anything.
+        recurs in your week. Then open your pick's details on a path
+        that shows the estimate: name its marketplace with the callout's
+        install command, or go through the Marketplaces tab. Note the
+        context-cost estimate before you touch anything.
       </li>
       <li>
         <strong>Install that one.</strong> One. The bundle next to it is
