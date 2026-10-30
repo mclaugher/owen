@@ -22,3 +22,4 @@ The review loop reads this file before every review and appends lessons here.
 - A PR for a lesson task whose body does not record the solved exercise is a rejection.
 - A report or ledger claim that git history contradicts (wrong PR, commit, or date) is a rejection. Verify attributions against `git log`.
 - A report claim that the PR's own final diff contradicts is a rejection. A fix or guideline commit on a report PR must update the report it invalidates.
+- A tool-behavior claim is verified against the docs page that governs that behavior, not only the page the callout cites. Default permission mode comes from permission-modes, not the quickstart.
