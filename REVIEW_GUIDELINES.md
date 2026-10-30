@@ -21,3 +21,4 @@ The review loop reads this file before every review and appends lessons here.
 - A published expected token range, or any learner-versus-anyone comparison, in a Track A lesson is a rejection (D33).
 - A PR for a lesson task whose body does not record the solved exercise is a rejection.
 - A report or ledger claim that git history contradicts (wrong PR, commit, or date) is a rejection. Verify attributions against `git log`.
+- A report claim that the PR's own final diff contradicts is a rejection. A fix or guideline commit on a report PR must update the report it invalidates.
