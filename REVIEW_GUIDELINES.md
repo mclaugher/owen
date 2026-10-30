@@ -20,3 +20,4 @@ The review loop reads this file before every review and appends lessons here.
 - An exercise that does not name its practice files is a rejection.
 - A published expected token range, or any learner-versus-anyone comparison, in a Track A lesson is a rejection (D33).
 - A PR for a lesson task whose body does not record the solved exercise is a rejection.
+- A report or ledger claim that git history contradicts (wrong PR, commit, or date) is a rejection. Verify attributions against `git log`.
