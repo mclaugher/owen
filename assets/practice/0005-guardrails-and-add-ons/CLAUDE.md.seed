@@ -1,0 +1,6 @@
+# Practice folder rules
+
+- Run the tests with `python3 -m unittest -v`.
+- Work is done only when the test run ends with `OK`.
+- `test_slugify.py` is the spec. Fix the program, never a test.
+- Standard library only. Add no dependency.

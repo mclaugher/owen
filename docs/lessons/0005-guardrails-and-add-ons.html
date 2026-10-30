@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="lesson-number" content="0005">
+  <title>0005 · Guardrails and Add-ons</title>
+  <style>
+/* lesson.css — shared visual language for every lesson page and the index.
+   Inlined into each lesson by scripts/inline.py at generation time. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --accent: #0b5fa5;
+  --border: #d0d0d0;
+  --callout-bg: #f3f7fb;
+  --callout-border: #0b5fa5;
+  --correct: #176b37;
+  --correct-bg: #e8f5ec;
+  --incorrect: #9c2b2b;
+  --incorrect-bg: #faecec;
+  --code-bg: #f4f4f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181b;
+    --fg: #e6e6e6;
+    --muted: #a5a5a5;
+    --accent: #6cb2e8;
+    --border: #3a3f44;
+    --callout-bg: #1c2733;
+    --callout-border: #6cb2e8;
+    --correct: #7fd49a;
+    --correct-bg: #19291e;
+    --incorrect: #e89a9a;
+    --incorrect-bg: #2e1b1b;
+    --code-bg: #22262a;
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--accent); }
+
+code, pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+}
+
+code { padding: 0.1em 0.3em; border-radius: 3px; }
+
+pre {
+  padding: 0.9rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+pre code { padding: 0; background: none; }
+
+.lesson-meta {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Dated callout: the only place for version-sensitive facts.
+   The date slot stays visible so the reader can judge staleness. */
+.dated-callout {
+  border-left: 4px solid var(--callout-border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.dated-callout .callout-date {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+/* Quiz */
+.quiz {
+  border-top: 2px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.quiz-question { margin-bottom: 1.75rem; }
+
+.quiz-stem { font-weight: 600; }
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.quiz-options li { margin: 0.35rem 0; }
+
+.quiz-options button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover:enabled { border-color: var(--accent); }
+
+.quiz-options button:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-options button.correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.quiz-options button.incorrect {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.quiz-feedback { font-weight: 600; }
+
+.quiz-feedback.is-correct { color: var(--correct); }
+
+.quiz-feedback.is-incorrect { color: var(--incorrect); }
+
+.quiz-explain { color: var(--muted); }
+
+.quiz-score {
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* Pointer: the optional "apply this to your own work" line. */
+.pointer {
+  margin-top: 2.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  html { background: #ffffff; color: #000000; }
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  .quiz-options button { border: 1px solid #888888; }
+  .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .pointer { border: 1pt dashed #000000; }
+  a { color: #000000; }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Guardrails and Add-ons</h1>
+    <p class="lesson-meta">Track A · lesson 0005 · about 20 minutes</p>
+  </header>
+
+  <main>
+    <p>
+      <a href="0004-first-win-and-your-setup.html">A4</a> ended on a line
+      with teeth: "never read the .env file" belongs in a deny rule,
+      because a deny rule is a fence the tool enforces in every mode. Now
+      look at the rest of your must-nevers. If your instructions file says
+      <strong>never declare work done while a test fails</strong> &mdash;
+      in bold, maybe with an exclamation mark &mdash; you have written a
+      hint and are trusting it like a lock. The file is context: the agent
+      reads it and weighs it, like any other sentence in the window. Most
+      of the time that is enough. "Must never happen" is not a
+      most-of-the-time requirement. This lesson turns that bold sentence
+      into machinery, then covers the opposite move: instructions you
+      load <em>less</em> often, not more forcefully.
+    </p>
+
+    <h2>A rule the tool enforces</h2>
+    <p>
+      A <strong>guardrail</strong> is a rule the tool enforces
+      automatically, with no model judgment involved. The distinction sits
+      in who acts. An instruction is read by the agent, which weighs it
+      against everything else in the window and almost always follows it.
+      A guardrail is run by the tool itself: at a fixed moment, the tool
+      executes a check you wrote, and the result &mdash; not anyone's
+      judgment &mdash; decides what happens next. An instruction can be
+      buried, outweighed, or forgotten at the bottom of a long session. A
+      guardrail cannot, because nothing reads it. It just runs.
+    </p>
+    <p>
+      The mechanism is simple. The tool exposes fixed moments in a session
+      &mdash; before an action runs, after a file changes, when the agent
+      is about to declare the turn finished &mdash; and at a moment you
+      pick, the tool runs a command you wrote. The command reports back
+      through its <strong>exit code</strong>: the number every command
+      hands the system when it ends, where zero means success. A passing
+      check lets the moment proceed. A failing check blocks the moment,
+      and your message &mdash; the command's error text &mdash; goes back
+      to the agent, which reads the message and keeps working. The loop is
+      mechanical at the bottom and adaptive at the top: the tool enforces,
+      the agent responds.
+    </p>
+    <p>
+      When does a guardrail beat an instruction? Two tests, both must
+      pass. First: <strong>use a guardrail for anything that must never
+      happen.</strong> If discovering a single violation would upset you,
+      the rule is guardrail-shaped; if the rule is a preference or a
+      judgment call, the instructions file is the right home. Second: a
+      guardrail needs a mechanical check &mdash; a command that can answer
+      yes or no. "The tests pass" is such a command. "The code is
+      readable" is not, and no settings file will make it one. The deny
+      rule you wrote in A4 already passed both tests: it is a guardrail
+      that fences <em>where the agent may reach</em>. Today's guardrail
+      fires at a <em>moment</em> and checks the state of the work.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        In Claude Code, guardrails are <strong>hooks</strong>, per the
+        <a href="https://code.claude.com/docs/en/hooks">hooks reference</a>:
+        commands the tool runs at named moments. <code>PreToolUse</code>
+        fires before a tool call, <code>PostToolUse</code> after one, and
+        <code>Stop</code> when the agent finishes responding &mdash; the
+        "declaring done" moment this lesson uses. Hooks are configured
+        under a <code>hooks</code> key in the same settings files as A4's
+        permission rules: <code>~/.claude/settings.json</code>,
+        <code>.claude/settings.json</code>, or
+        <code>.claude/settings.local.json</code>. A hook command that
+        exits with code 2 blocks its moment, and the command's error text
+        is handed back to the agent.
+      </p>
+    </aside>
+
+    <h2>The loop, end to end</h2>
+    <p>
+      Theory done; now watch the loop run. The practice folder below holds
+      a program, <code>slugify.py</code>, that turns a post title into a
+      slug &mdash; the lowercase, hyphen-separated form of a title that
+      goes in a web address. Next to it sits <code>test_slugify.py</code>
+      with four tests, and one of the four fails, because the program has
+      a real bug. Resist the reflex you trained in A4. The bug is not the
+      exercise. The exercise is what you build around the bug before
+      anyone fixes it.
+    </p>
+
+    <section class="practice-download" id="practice-download">
+  <h2>Practice folder</h2>
+  <p>Download the practice folder, then unzip it next to your other projects. The button works offline. Download it again for a fresh copy.</p>
+  <p><button type="button" id="practice-download-btn">Download 0005-guardrails-and-add-ons-practice.zip</button></p>
+  <script>
+  (function () {
+    var data = "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";
+    document.getElementById("practice-download-btn").addEventListener("click", function () {
+      var bin = atob(data);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var url = URL.createObjectURL(new Blob([bytes], { type: "application/zip" }));
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "0005-guardrails-and-add-ons-practice.zip";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    });
+  })();
+  </script>
+</section>
+
+    <p><strong>Part one of the exercise</strong> &mdash; six steps, about
+    ten minutes:</p>
+    <ol>
+      <li>
+        <strong>Download and unzip.</strong> The button above saves the
+        folder <code>0005-guardrails-and-add-ons</code>. Inside:
+        <code>README.md</code>, <code>slugify.py</code>,
+        <code>test_slugify.py</code>, and a <code>CLAUDE.md</code> &mdash;
+        a lean one this time, the shape your A4 trim was aiming at.
+      </li>
+      <li>
+        <strong>See the failure yourself.</strong> <code>README.md</code>
+        names the test command. Run it and read the one failure: expected
+        output on one line, actual output on the other. That failing test
+        is your guardrail's raw material.
+      </li>
+      <li>
+        <strong>Add the guardrail.</strong> Create the folder
+        <code>.claude</code> inside the practice folder, and in it a file
+        <code>settings.json</code> holding the block from the callout
+        below. Read the block before you paste it &mdash; every key in it
+        is a word you now know.
+      </li>
+      <li>
+        <strong>Watch it fire.</strong> Start a session in the practice
+        folder, in the mode that asks. Now ask something that has nothing
+        to do with tests &mdash; "what does slugify.py do?" is perfect.
+        The agent answers and tries to finish. At that moment the tool
+        runs your check, the check fails, and the finish is blocked: your
+        message comes back to the agent, and the agent &mdash; told that
+        a test fails and the work is not done &mdash; gets back to work
+        on the failure. Nothing about your question involved tests. That
+        is the point: no model judgment anywhere in the trigger.
+      </li>
+      <li>
+        <strong>Let the fix happen.</strong> The agent will propose the
+        repair to <code>slugify.py</code>; review the diff like A3 taught
+        you, approve it, or make the fix yourself by hand. Either way,
+        re-run the test command and watch all four tests pass.
+      </li>
+      <li>
+        <strong>Watch it clear.</strong> The agent finishes its reply
+        again &mdash; and this time nothing blocks, because the same
+        check now exits zero. The silence is the guardrail passing. What
+        you built is a folder where <em>no session can declare work done
+        while a test fails</em>. Notice what that sentence does not
+        contain: any appeal to the agent's attention, memory, or good
+        behavior.
+      </li>
+    </ol>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        The guardrail, for <code>.claude/settings.json</code> in the
+        practice folder &mdash; strict JSON, a plain-text settings format
+        where every bracket and comma counts, per the
+        <a href="https://code.claude.com/docs/en/hooks">hooks reference</a>:
+      </p>
+      <pre><code>{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -m unittest -q 2&gt;/dev/null || { echo 'A test fails, so this work is not done. Run python3 -m unittest -v and fix the program, not the test.' &gt;&amp;2; exit 2; }"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+      <p>
+        <code>Stop</code> is the moment the agent finishes responding.
+        The command runs the tests quietly; on failure it prints one
+        message and exits with code 2 &mdash; the code that blocks. The
+        test runner itself reports failure with exit code 1, which would
+        not block, so the command wraps it. The text after
+        <code>echo</code> is exactly what the agent receives, so write it
+        the way you would brief a colleague: what is wrong, and what to
+        run. In an interactive session, Claude Code holds back a folder's
+        hooks until you accept the trust dialog for that folder &mdash;
+        and a hook is a command, so read it before you trust it.
+      </p>
+    </aside>
+
+    <p>
+      Two honest boundaries before you fall in love. First, a guardrail
+      is blunt: your check runs at <em>every</em> finish, even after the
+      innocent question in step 4 &mdash; you watched that happen. The
+      bluntness is the value and the price; put a slow test suite in a
+      Stop check and you will feel the price. Second, a guardrail is only
+      as good as its check. Yours enforces "the test command passes,"
+      not "the work is correct" &mdash; a session that weakened a test
+      would slide right past it. That is why the practice folder's
+      <code>CLAUDE.md</code> carries the line <em>fix the program, never
+      a test</em>: context guarding the guardrail. The two layers are not
+      rivals. Machinery holds the line; instructions explain where the
+      line is.
+    </p>
+
+    <h2>Add-ons: instructions that load when needed</h2>
+    <p>
+      Now the opposite move. A4 taught you that the instructions file
+      loads whole into every session, so every line must earn its place
+      in <em>all</em> sessions. But some of your best instructions are
+      occasional. A release checklist. A migration recipe. The style
+      rules for one odd corner of the codebase. Paste any of those into
+      the instructions file and you tax every session for a document most
+      sessions never need &mdash; the primer's math again, and this time
+      the right answer is not trimming. It is a different container.
+    </p>
+    <p>
+      An <strong>add-on</strong> is a folder of packaged instructions
+      with a name and a one-line description. The description is always
+      present &mdash; a standing line in the window, so the agent knows
+      the add-on exists. The full instructions load only when the task
+      calls for them, or when you invoke the add-on by name.
+      <strong>Loading on demand beats loading everything always.</strong>
+      The three-hundred-line release checklist costs its whole self in
+      release sessions and one line everywhere else. That is the entire
+      idea, and it is the primer's lesson wearing a new coat: tokens are
+      the budget, and an add-on is a way to spend them only where they
+      buy something.
+    </p>
+    <p>
+      The standing line is still a cost. Install ten add-ons and every
+      session pays ten description lines on every turn, used or not
+      &mdash; a quiet tax that grows one harmless install at a time. So
+      judge add-ons the way you judge dependencies: <strong>one at a
+      time, never a bundle wholesale.</strong> A bundle is sold by its
+      best member and paid for by all of them. For each add-on, answer
+      three questions. <em>What does it load?</em> Open its instructions
+      file and look; the tool can measure the cost for you. <em>When
+      does it load?</em> Which tasks pull the full body in, and how often
+      are those your tasks? <em>Does it earn its place?</em> Would you
+      otherwise retype these instructions often enough to pay the
+      standing line &mdash; A4's test, applied per add-on. And one more
+      habit from A3: an add-on is instructions your agent will follow,
+      and some ship commands that run. Read it before you install it.
+      You own the setup with your name on it.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        In Claude Code, add-ons are <strong>skills</strong>, per the
+        <a href="https://code.claude.com/docs/en/skills">skills docs</a>:
+        a skill is a folder holding a <code>SKILL.md</code> file &mdash;
+        a name, a one-line <code>description</code>, and the
+        instructions. A personal skill at
+        <code>~/.claude/skills/&lt;name&gt;/SKILL.md</code> loads in all
+        your projects; a project skill at
+        <code>.claude/skills/&lt;name&gt;/SKILL.md</code> is committed
+        and shared with the team. The description loads on every turn;
+        the body loads when you invoke the skill as
+        <code>/&lt;name&gt;</code> or when the model judges it relevant.
+        <code>/skills</code> lists every skill with its context cost, and
+        <code>/skill-doctor</code> reports cost and usage and flags
+        skills you never invoke. The docs recommend keeping
+        <code>SKILL.md</code> under 500 lines and moving detail into
+        supporting files that load on demand.
+      </p>
+    </aside>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        Collections of skills ship as <strong>plugins</strong> &mdash;
+        bundles of skills, agents, and hooks installed as one unit &mdash;
+        from a <strong>marketplace</strong>: a catalog that lists plugins
+        and where to fetch each one, per the
+        <a href="https://code.claude.com/docs/en/plugins">plugins docs</a>.
+        Anthropic's official marketplace,
+        <code>claude-plugins-official</code>, is added automatically the
+        first time you start an interactive terminal session. Run
+        <code>/plugin</code> to browse it &mdash; the Discover tab shows
+        a context-cost estimate <em>before</em> you install &mdash; and
+        install one with
+        <code>/plugin install &lt;name&gt;@claude-plugins-official</code>.
+        <code>claude plugin disable &lt;name&gt;</code> turns one off
+        without uninstalling. An enabled plugin's skill names and
+        descriptions sit in your window on every turn, in every session.
+      </p>
+    </aside>
+
+    <h2>Exercise, part two: judge one add-on</h2>
+    <p>
+      Fifteen minutes of practice for the second half &mdash; and the
+      deliverable is a judgment, not an install.
+    </p>
+    <ol>
+      <li>
+        <strong>Browse.</strong> Open the official marketplace from the
+        callout above and read descriptions until one names a job you
+        actually have &mdash; commit messages, code review, whatever
+        recurs in your week. Note its context-cost estimate before you
+        touch anything.
+      </li>
+      <li>
+        <strong>Install that one.</strong> One. The bundle next to it is
+        sold by its best member.
+      </li>
+      <li>
+        <strong>Answer the three questions in writing.</strong> What does
+        it load &mdash; list the command and check the cost. When does it
+        load &mdash; read its description and name the tasks that would
+        trigger it. Does it earn its place &mdash; would you retype what
+        it carries often enough to pay its standing line?
+      </li>
+      <li>
+        <strong>Act on your answer.</strong> Keep it, or turn it off.
+        Removing an add-on after a fair reading is a pass, not a failure.
+        The habit you are building is the judgment, and it is the same
+        judgment you will apply when a teammate shares twelve at once.
+      </li>
+    </ol>
+
+    <h2>Keep going</h2>
+    <p>
+      Two primary sources back this lesson's callouts and are worth your
+      next twenty minutes: the
+      <a href="https://code.claude.com/docs/en/hooks">hooks reference</a>
+      for the moments and the blocking rules, and the
+      <a href="https://code.claude.com/docs/en/skills">skills docs</a>
+      for what loads when. And the standing reminder: the agent is your
+      teacher. Paste the guardrail block from this lesson into a session
+      and ask it to explain every key &mdash; then ask what else the
+      finish moment could check in your real repo.
+    </p>
+
+    <!-- Quiz: exactly 5 questions. Markup contract documented in assets/quiz.js. -->
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">"Never declare work done while a test fails." Where should that rule live?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">In the instructions file, in bold, with the reason spelled out beside it</button></li>
+            <li><button type="button" data-option="b">In a guardrail that runs the test command when the agent tries to finish</button></li>
+            <li><button type="button" data-option="c">In the deny list from A4, which fences the agent away from the test file</button></li>
+            <li><button type="button" data-option="d">In every prompt you type, so the rule never falls out of the window</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>"Must never happen" plus a mechanical check means a guardrail. A deny rule fences where the agent may reach; this rule checks the state of the work at a moment, which is exactly what the finish-moment guardrail does.</p>
+        </li>
+        <li class="quiz-question" data-correct="d">
+          <p class="quiz-stem">What separates a guardrail from a strongly worded instruction?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">A guardrail is written in JSON, and the agent reads JSON more carefully</button></li>
+            <li><button type="button" data-option="b">A guardrail works in any tool, while an instruction binds only one tool</button></li>
+            <li><button type="button" data-option="c">A guardrail costs no tokens, while an instruction costs tokens all session</button></li>
+            <li><button type="button" data-option="d">The tool runs a guardrail's check every time; an instruction is weighed</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>An instruction is context the agent reads and weighs against everything else in the window. A guardrail is a command the tool itself runs at a fixed moment — no judgment, no forgetting, no burying.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">Your finish-moment guardrail's check fails. What happens next?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The finish is blocked, your message reaches the agent, and work resumes</button></li>
+            <li><button type="button" data-option="b">The session ends anyway, and the failure is logged for you to read later</button></li>
+            <li><button type="button" data-option="c">The tool rolls back every edit the session made since your last commit</button></li>
+            <li><button type="button" data-option="d">The tool switches the session into the mode that asks before each action</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Mechanical at the bottom, adaptive at the top: the tool blocks the finish and hands your error text to the agent, and the agent acts on it. That loop is what turned a failing test into a fixed program in the exercise.</p>
+        </li>
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">You installed ten add-ons last month and used one. What do the other nine cost?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Nothing at all, because an add-on that never runs never loads anything</button></li>
+            <li><button type="button" data-option="b">Their full instruction files, reloaded at the start of every session</button></li>
+            <li><button type="button" data-option="c">One description line each, paid inside the window on every single turn</button></li>
+            <li><button type="button" data-option="d">Nothing in tokens, though each one slows the tool's updates every week</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The body loads on demand, but the name and one-line description stand in the window on every turn so the agent knows the add-on exists. Nine unused add-ons are nine standing lines — the quiet tax that makes "judge one at a time" worth it.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">A teammate shares a bundle of twelve add-ons that made them faster. What now?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Judge each one alone: what it loads, when it loads, whether it earns it</button></li>
+            <li><button type="button" data-option="b">Install all twelve, because a teammate you trust has already judged them</button></li>
+            <li><button type="button" data-option="c">Install the six smallest, because context cost is the only real measure</button></li>
+            <li><button type="button" data-option="d">Decline the bundle, because another engineer's setup can never fit yours</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>A bundle is sold by its best member and paid for by all of them. The teammate's judgment measured their work, not yours — so each add-on faces the three questions against your own week, and some will pass.</p>
+        </li>
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <!-- Pointer: the optional "apply this to your own work" line. Always last. -->
+    <p class="pointer">Optional: add one guardrail your team's rules already imply to your own repo. Start with the sentence in your instructions file that is secretly a check command wearing bold type.</p>
+  </main>
+
+  <script>
+// quiz.js — instant-feedback quiz widget. Vanilla JS, no dependencies.
+//
+// Expected markup, one block per lesson:
+//
+//   <section class="quiz" id="quiz">
+//     <h2>Quiz</h2>
+//     <ol class="quiz-questions">
+//       <li class="quiz-question" data-correct="b">
+//         <p class="quiz-stem">Question text?</p>
+//         <ul class="quiz-options">
+//           <li><button type="button" data-option="a">First option</button></li>
+//           <li><button type="button" data-option="b">Second option</button></li>
+//         </ul>
+//         <p class="quiz-feedback" hidden></p>
+//         <p class="quiz-explain" hidden>Why the answer is right.</p>
+//       </li>
+//     </ol>
+//     <p class="quiz-score" hidden></p>
+//   </section>
+//
+// Behavior: the learner clicks one option per question. The widget shows
+// right or wrong at once, reveals the explanation, and locks the question.
+// When every question is answered, the widget shows the score.
+
+(function () {
+  'use strict';
+
+  function answerQuestion(question, button, state) {
+    var correct = question.getAttribute('data-correct');
+    var chosen = button.getAttribute('data-option');
+    var isCorrect = chosen === correct;
+
+    question.querySelectorAll('.quiz-options button').forEach(function (b) {
+      b.disabled = true;
+      if (b.getAttribute('data-option') === correct) {
+        b.classList.add('correct');
+      }
+    });
+    if (!isCorrect) {
+      button.classList.add('incorrect');
+    }
+
+    var feedback = question.querySelector('.quiz-feedback');
+    if (feedback) {
+      feedback.textContent = isCorrect
+        ? 'Correct.'
+        : 'Not quite. The marked option is the answer.';
+      feedback.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+      feedback.hidden = false;
+    }
+
+    var explain = question.querySelector('.quiz-explain');
+    if (explain) {
+      explain.hidden = false;
+    }
+
+    state.answered += 1;
+    if (isCorrect) {
+      state.correct += 1;
+    }
+    if (state.answered === state.total && state.scoreEl) {
+      state.scoreEl.textContent =
+        'Score: ' + state.correct + ' of ' + state.total + '.';
+      state.scoreEl.hidden = false;
+    }
+  }
+
+  function initQuiz(quiz) {
+    var questions = quiz.querySelectorAll('.quiz-question');
+    var state = {
+      total: questions.length,
+      answered: 0,
+      correct: 0,
+      scoreEl: quiz.querySelector('.quiz-score')
+    };
+
+    questions.forEach(function (question) {
+      question.querySelectorAll('.quiz-options button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          answerQuestion(question, button, state);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.quiz').forEach(initQuiz);
+  });
+})();
+</script>
+</body>
+</html>
