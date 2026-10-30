@@ -20,7 +20,10 @@ None. Task 4 (generate lesson 0004 — first win, then make it yours) is next: i
 
 ## Guideline additions from the review loop
 
-None. REVIEW_GUIDELINES.md is unchanged since the 2026-10-28 plan PR.
+This PR's own review rounds added two lines to REVIEW_GUIDELINES.md:
+
+1. A report or ledger claim that git history contradicts (wrong PR, commit, or date) is a rejection; verify attributions against `git log` (f9af3fb).
+2. A report claim that the PR's own final diff contradicts is a rejection; a fix or guideline commit on a report PR must update the report it invalidates (4ad38a5).
 
 ## Look at first
 
