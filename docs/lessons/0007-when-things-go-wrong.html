@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="lesson-number" content="0007">
+  <title>0007 · When Things Go Wrong, and What It Cost</title>
+  <style>
+/* lesson.css — shared visual language for every lesson page and the index.
+   Inlined into each lesson by scripts/inline.py at generation time. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --accent: #0b5fa5;
+  --border: #d0d0d0;
+  --callout-bg: #f3f7fb;
+  --callout-border: #0b5fa5;
+  --correct: #176b37;
+  --correct-bg: #e8f5ec;
+  --incorrect: #9c2b2b;
+  --incorrect-bg: #faecec;
+  --code-bg: #f4f4f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181b;
+    --fg: #e6e6e6;
+    --muted: #a5a5a5;
+    --accent: #6cb2e8;
+    --border: #3a3f44;
+    --callout-bg: #1c2733;
+    --callout-border: #6cb2e8;
+    --correct: #7fd49a;
+    --correct-bg: #19291e;
+    --incorrect: #e89a9a;
+    --incorrect-bg: #2e1b1b;
+    --code-bg: #22262a;
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--accent); }
+
+code, pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+}
+
+code { padding: 0.1em 0.3em; border-radius: 3px; }
+
+pre {
+  padding: 0.9rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+pre code { padding: 0; background: none; }
+
+.lesson-meta {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Dated callout: the only place for version-sensitive facts.
+   The date slot stays visible so the reader can judge staleness. */
+.dated-callout {
+  border-left: 4px solid var(--callout-border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.dated-callout .callout-date {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+/* Quiz */
+.quiz {
+  border-top: 2px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.quiz-question { margin-bottom: 1.75rem; }
+
+.quiz-stem { font-weight: 600; }
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.quiz-options li { margin: 0.35rem 0; }
+
+.quiz-options button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover:enabled { border-color: var(--accent); }
+
+.quiz-options button:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-options button.correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.quiz-options button.incorrect {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.quiz-feedback { font-weight: 600; }
+
+.quiz-feedback.is-correct { color: var(--correct); }
+
+.quiz-feedback.is-incorrect { color: var(--incorrect); }
+
+.quiz-explain { color: var(--muted); }
+
+.quiz-score {
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* Pointer: the optional "apply this to your own work" line. */
+.pointer {
+  margin-top: 2.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  html { background: #ffffff; color: #000000; }
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  .quiz-options button { border: 1px solid #888888; }
+  .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .pointer { border: 1pt dashed #000000; }
+  a { color: #000000; }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>When Things Go Wrong, and What It Cost</h1>
+    <p class="lesson-meta">Track A · lesson 0007 · about 20 minutes</p>
+  </header>
+
+  <main>
+    <p>
+      <a href="0006-small-sessions.html">A6</a> taught you to end
+      finished sessions on purpose — and every session in A6 behaved.
+      The missing case is the one that hurts: a session going bad
+      <em>mid-task</em>. The reflex there is to keep correcting in
+      place, because restarting feels like forfeiting the tokens you
+      already spent. Notice what that reflex rests on: "restarting is
+      cheaper" has been, so far, a claim you took on faith — and
+      <a href="0003-reviewing-agent-output.html">A3</a> taught you
+      what claims are worth. This lesson closes the course with the
+      two missing pieces: the signs that say stop now, and the bill
+      that turns "cheaper" from faith into something you have read
+      with your own eyes.
+    </p>
+
+    <h2>The warning signs</h2>
+    <p>
+      The primer told you the window degrades as it fills: the agent
+      weighs more and attends less. Here is what degrading looks like
+      from your side of the screen. Three signs, each one checkable:
+    </p>
+    <ul>
+      <li>
+        <strong>The session forgets an instruction it was given.</strong>
+        You said "change nothing in the tests" an hour ago, and the
+        diff now touches a test. The instruction is still in the
+        window — the session no longer attends to it.
+      </li>
+      <li>
+        <strong>The session repeats itself.</strong> It retries an
+        approach you both already watched fail, or re-reads a file it
+        read three turns ago, as if arriving for the first time.
+      </li>
+      <li>
+        <strong>The session states wrong things with confidence.</strong>
+        "All tests pass now" — and nothing ran. A3 named this:
+        claims are not evidence, and fluency is free. A failing
+        window does not sound failing. It sounds exactly as sure as a
+        healthy one.
+      </li>
+    </ul>
+    <p>
+      Read the three signs as one message: the window, not the code,
+      is the problem. That distinction decides everything you do
+      next, because correcting in place adds more weight to the thing
+      that is failing under weight. You cannot argue a window back to
+      health — every correction is one more turn paying for the same
+      degraded transcript.
+    </p>
+
+    <h2>The restart rule</h2>
+    <p>
+      So the rule: <strong>when the signs fire, restart with a better
+      brief instead of arguing with a long session.</strong> The
+      tokens already spent feel like a reason to stay. They are not.
+      They are spent either way — no amount of staying brings them
+      back. The only question a restart decides is where the
+      <em>next</em> tokens go: into correction turns stacked on a
+      transcript that taxes every one of them, or into a fresh window
+      that reads the durable state and starts attending again.
+    </p>
+    <p>
+      The better brief is smaller than it feels. Everything
+      <a href="0006-small-sessions.html">A6</a> made you keep in
+      files — the instructions file, the plan file, the save points —
+      greets the new session for free. What is left is only what the
+      failing session learned that never reached a file: what you
+      asked for, which approach already failed, which decisions are
+      already settled. Three sentences, sometimes three lines in the
+      plan file. A restart is expensive exactly when you kept
+      everything in the conversation — which is why the habits from
+      A6 are what make this rule cheap to follow.
+    </p>
+    <p>
+      In the practice folder below, the reset is mechanical: restore
+      your save point zero, or download the folder again for a
+      factory-fresh copy. On real work, the save points are the
+      reset. Either way the move is the same — good state from disk,
+      better brief, fresh window.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        The Claude Code course-correction controls, per the
+        <a href="https://code.claude.com/docs/en/commands">commands
+        reference</a> and the
+        <a href="https://code.claude.com/docs/en/costs">cost
+        guide</a>. <kbd>Esc</kbd> stops the current action
+        immediately. <code>/rewind</code> (or double-tap
+        <kbd>Esc</kbd>) rolls the conversation, the code, or both
+        back to an earlier checkpoint — Claude Code saves one before
+        each change. <code>/clear</code>, from A6, is the full
+        restart: new conversation, empty window, the instructions
+        file and settings reloaded from disk.
+      </p>
+    </aside>
+
+    <h2>Read the bill</h2>
+    <p>
+      One habit is still missing, and it is the one that makes the
+      restart rule yours instead of this course's. The tool can show
+      you two bills: <strong>what fills the window right now</strong>,
+      and <strong>what the session has spent in total</strong>. Open
+      them once per real session and the economics of this whole
+      course stop being claims. You see the finished task still
+      sitting in the window as dead weight. You see that your own
+      typing is a sliver. You see what a restart would actually
+      throw away — usually far less than it felt like.
+    </p>
+    <p>
+      Two readings matter more than any number on the screen. First:
+      the biggest item is almost never your words or the agent's —
+      it is what the tools brought back, the files read and the test
+      output, because that is what the window is for. Second: part of
+      the window was full before you typed a word. Your instructions
+      file, the tool's own machinery — the fixed cost of opening a
+      session. Small sessions pay it more often; long sessions pay
+      the transcript tax instead. You have now seen both sides of
+      that trade with your own eyes, which is the point.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        The Claude Code cost views, per the
+        <a href="https://code.claude.com/docs/en/commands">commands
+        reference</a> and the
+        <a href="https://code.claude.com/docs/en/costs">cost
+        guide</a>. <code>/context</code> draws the window bill: a
+        colored grid of what fills the window right now — messages,
+        tool output, memory files, free space — with trim
+        suggestions. <code>/usage</code> shows the spend bill: the
+        session's totals (tokens in, tokens out, cache traffic, an
+        estimated dollar figure) plus, on subscription plans, usage
+        bars and a breakdown of what counts against plan limits.
+        <code>/cost</code> and <code>/stats</code> are aliases of
+        <code>/usage</code>. The session totals reset when
+        <code>/clear</code> starts a new session.
+      </p>
+    </aside>
+
+    <h2>The finale: one feature, every habit, then the bill</h2>
+    <p>
+      The practice folder below holds a small todo list,
+      <code>todo.py</code>, with four passing tests in
+      <code>test_todo.py</code> and a lean <code>CLAUDE.md</code>.
+      The task, specified in <code>README.md</code>, is a
+      <code>sweep</code> command with two decisions deliberately left
+      open. Nothing about the task is new. That is the design: this
+      is the course's closing exercise, and the work is to run every
+      habit you have, start to finish, and then read what it cost.
+    </p>
+
+    <section class="practice-download" id="practice-download">
+  <h2>Practice folder</h2>
+  <p>Download the practice folder, then unzip it next to your other projects. The button works offline. Download it again for a fresh copy.</p>
+  <p><button type="button" id="practice-download-btn">Download 0007-when-things-go-wrong-practice.zip</button></p>
+  <script>
+  (function () {
+    var data = "UEsDBBQAAAAIAAAAIVzC4Fap2AAAADsBAAAjAAAAMDAwNy13aGVuLXRoaW5ncy1nby13cm9uZy9DTEFVREUubWRFkDFuwzAMRXef4gNdYy89QZYuLdKgGTrWishEQm3SoGU7un1lFUUnEdB/nw98wtmcT9EzbjoQG2wZeG6aFh+LIAVG4jnN2GIK6Kecgsoz2hGLxLR/oV37rsQ/1b4RZ5AKQ2XI2AL/N5ReAQv9Nb2/VuqSnJAzwhCv5ixXssORCKIgngrC4nPdsPf157fjqRupBz9iETvA2BFiwpVvaoysC3xwcmc4yfBKvMMn3koiuDWqQZiLiCvv9isXS/E+fCUl7aZc3V7io+pPpndz46HE13IgV5Gu+QFQSwMEFAAAAAgAAAAhXNstpqnnAgAAQgYAACMAAAAwMDA3LXdoZW4tdGhpbmdzLWdvLXdyb25nL1JFQURNRS5tZH1UTW/bMAy961cQaI+p0aaHAd2pWC/DOhQYCuwwFJNiM7EQWzQkOW7+/UjKWbM03SVwpEfxvcePC3imhmCIrs6+RlhT12A05hFTogDX19efAEOTILcINY0xIfiQfIN84tOMr+ApcCy6PEZcAO4w7k3rVj4vJDBo9Mp3XWXMxQX8bF0u4T4ZYzMzqIa95X/gIPWu60DOoPMpV/A1Q8oUkdEZe/4NUELya7YLoICm85x+wKiIiq8x5d9/n22ZozAdI8iFaOH8Da4lipmZeowRQ4YVtm7nieXcMwUNGFxKdxCI2YYNtBhRWK4ibTFU8MyyJopbw2fMAwJOby40cjL53BY/QP049jG7cdPmYskX6nvHPhtzBfdNAy6oljuwwz63FG5hlgOObyPuPKeStxq/XlsO+u7iVkNgqZnPRCqhpYAf2dji5hmYuC6gH2Opm3p2hLvqYQw+yzFc7azSFyOyS9s7KeCEOLBGFWSMqHmXQzG2GDgjoacd17h4pVRVDY3Z0Pqo4iBYNwzalWIogRX43A6+kKbIbalfKtO02DWnnSO14ecVZX+9vljo2UTuZX577rWU3Z7DzEn6rSjkMB9LouqIAmwiTdzIdaSUitD02RRTgqgDjC5pN3PpZW4GBvpVh5BaN2DhNee/0XS3SgybUlieGGvNJZyrm7kBYCUwRY5XYUPnglnyKbycto25LWApwNyZPGVjl888rvxFxZC5wYqn/6FwJtkl1DJ1s03mhOF7DiLSPE/Eg1r75Cmwpzx9DXZ+xQ5m7DgfrjPQIKP4wCheSisS7wLsdXj55YXRBSQ7oGyh0csXyZ+evbypyjqypSV5E/qQU+lMfHX9oHWRikpLbohkNhkbK7M8CW2IqzpJtkCleXktqGCdkQfdB3wtM/7RNJVlqx1gn77ZSqDnthmn7dBxTGaHZO2UzbameKAjoffzMHZ+W7w+KCqzprU5TJos1n9myYA2H6c5YOltMNhidrdmaX8AUEsDBBQAAAAIAAAAIVyBPKRNngEAAHwEAAAmAAAAMDAwNy13aGVuLXRoaW5ncy1nby13cm9uZy90ZXN0X3RvZG8ucHmdVMFunDAQvfMVI05GqpDSWyLtqekfJKdoNXLwsFg1NrWHkP37jGFDsuy2auMDeOyZ9948G2w/hMgQUmGXGVM/tNbRezx6y0yJizUhmFAUReN0SvAgwYPsqve0Okc/dKLqrgAZhlpIxI+DSuTa02IeOayR+wF2K6cUZw4dj/c2UsMhHlW1qQjOYDMZqQqpPhDL/FOOrDWdsVGt8LXXPVXFKoZJx/sw+a2eTeWJZsueARtH2o+DOgNNjM7KY7LchZHRaNaY9DGhD9xZf0AOaMJVF8RIivzz96idyu7WbYi9XgBV9Q3KE4RYDyaUW15tDHJHfhGQujClHKMVWzEMdNHqzCFVqoz0YmkCyQZj27as/lPYDcAT7OES5lyhCZ6w1/HXIsyP/TNFMrPCP4ubouzPoIPT/pO2f9E/52RedfOXptadteSswzoNzrKznpK0e5b8NPf+uoeNSjHl+3VT9h8AV/3Jtya0GLU/EDZdfq2X5wsmXT/A2ZHb5U5Bth9uv3roF8zyh2gBMX9viLDbQYly6NYjlovy9R+RV+XzeQNQSwMEFAAAAAgAAAAhXK6mIAcVAgAAxQQAACEAAAAwMDA3LXdoZW4tdGhpbmdzLWdvLXdyb25nL3RvZG8ucHmFVF+r0zAUf++nOOSpw2twXp+GEyZ3guAVuU4Qagm5Jt0iTVLS7LoxB34IP6GfxJM06zp6ufapOcn5/TtpCSHeCkubPfz9/Qc4tJrXNYQa1Kr1FD5LCXfLxc3tkmoBlXXw3WrNjWgpISRTurHOQ7tvs8pZDQ33m1rdQ6p/wmWW3SxWC/bu/YclzGMl70j9zpNJlmVCVqC81G0+mWWAj6rAWA99G5U71NJvh8dJv3UGijIbrM4NTnLBvNz5fELbpla+VkYiQGJr+YPMYylBnjt/OpTStRJCf1hl4kF4BuSbITGAuFYGOoATJhciD20JMW6i32TsXKO8aaQReUUKKOEQWo6k2x/IGtqqCGJLMTsdToTCGpmbrb6X7gnOlOUUXs+hOxzeamku/F+wGRsR4NCdR8IevEgQz2FaIhEpdiXBaEZ7xfWsfNpSUI+Oxp2vZmVvEdPW3LNwE/P/e4xbIz9ox2+UWeOlxsjIUEWYaDfiihzUETo5x27K6qoftER90nGfnFzBtJ+65tjN3frhfHVDtrECb+bwEvBTgbAsXmBiGBnOkoxEhstDIImJp6ezcjIZQ84fgwxZknN1WlLVCrVW/pEvJt4aZXxiGZCEwgg6RD+WezGXi0S3LV/jXJu931hzDaefC/qD1fLrilIKv6IG+Pjl9u3yDleRAuNECYwZriVjkZqxEC5jib5xQXXMG/82dBDSP1BLAQIUAxQAAAAIAAAAIVzC4Fap2AAAADsBAAAjAAAAAAAAAAAAAACkAQAAAAAwMDA3LXdoZW4tdGhpbmdzLWdvLXdyb25nL0NMQVVERS5tZFBLAQIUAxQAAAAIAAAAIVzbLaap5wIAAEIGAAAjAAAAAAAAAAAAAACkARkBAAAwMDA3LXdoZW4tdGhpbmdzLWdvLXdyb25nL1JFQURNRS5tZFBLAQIUAxQAAAAIAAAAIVyBPKRNngEAAHwEAAAmAAAAAAAAAAAAAACkAUEEAAAwMDA3LXdoZW4tdGhpbmdzLWdvLXdyb25nL3Rlc3RfdG9kby5weVBLAQIUAxQAAAAIAAAAIVyupiAHFQIAAMUEAAAhAAAAAAAAAAAAAACkASMGAAAwMDA3LXdoZW4tdGhpbmdzLWdvLXdyb25nL3RvZG8ucHlQSwUGAAAAAAQABABFAQAAdwgAAAAA";
+    document.getElementById("practice-download-btn").addEventListener("click", function () {
+      var bin = atob(data);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var url = URL.createObjectURL(new Blob([bytes], { type: "application/zip" }));
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "0007-when-things-go-wrong-practice.zip";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    });
+  })();
+  </script>
+</section>
+
+    <p><strong>The exercise</strong> — about fifteen minutes:</p>
+    <ol>
+      <li>
+        <strong>Download and read.</strong> The button above saves
+        the folder <code>0007-when-things-go-wrong</code>. Read
+        <code>README.md</code>: the <code>sweep</code> command, the
+        fixed behavior, and the two open decisions. Notice the task
+        passes <a href="0001-the-mental-model.html">A1</a>'s test —
+        bounded scope, checkable outcome, small context footprint.
+      </li>
+      <li>
+        <strong>Make save point zero.</strong> <code>git init</code>,
+        add everything, commit. This is also your reset: if the
+        warning signs fire later, you restore this point instead of
+        arguing.
+      </li>
+      <li>
+        <strong>Plan session
+        (<a href="0002-scoping-and-modes.html">A2</a>,
+        <a href="0006-small-sessions.html">A6</a>).</strong> Start a
+        session in the folder, in the mode that asks. One product:
+        "Read README.md and write a plan for the sweep command to
+        PLAN.md. Change nothing else." The plan must settle both open
+        decisions and name the check command. Review it like
+        <a href="0003-reviewing-agent-output.html">A3</a> taught you,
+        end the session, commit the plan.
+      </li>
+      <li>
+        <strong>Build session.</strong> Start fresh: "Read PLAN.md
+        and carry it out." Watch for the warning signs while it
+        works — this is the session you would restart. Review the
+        diff, then run <code>python3 -m unittest -v</code>: at least
+        two new <code>sweep</code> tests, and the run ends
+        <code>OK</code>. Claims are not evidence; the test run is.
+      </li>
+      <li>
+        <strong>Read the bill before you end the session.</strong>
+        Open the window bill and the spend bill, and write down three
+        answers. One: which holds more tokens — what you typed, what
+        the agent said, or what the tools brought back? Two: how much
+        of the window did the whole build use, and how much was full
+        before you typed a word? Three: name one thing in the window
+        that lives in no file — that is what a restart brief would
+        have had to carry. Your numbers are yours. This course
+        publishes no expected range, and nobody is comparing.
+      </li>
+      <li>
+        <strong>Commit the result.</strong> If anything went wrong on
+        the way — a sign fired, you restored the save point, you
+        restarted with a better brief — that was not the exercise
+        failing. That was the exercise.
+      </li>
+    </ol>
+
+    <p>
+      You can now scope a
+      task to the window, plan before you build, match the mode to
+      the risk, verify like the owner of the result, carry your
+      setup in files, enforce your must-nevers, split work into small
+      sessions, end a failing one early, and read the bill either
+      way. The efficiency course starts from that bill and teaches
+      you to shrink it on purpose: audit what loads into every
+      session, keep the window lean, and size the model and its
+      thinking to the task.
+    </p>
+
+    <h2>Keep going</h2>
+    <p>
+      The primary source behind this lesson's callouts is the
+      official <a href="https://code.claude.com/docs/en/costs">cost
+      guide</a> — the same page that documents the views you just
+      read, plus the levers for shrinking them. And the standing
+      reminder, one last time: the agent is your teacher. Paste your
+      three bill answers into a fresh session and ask what it would
+      trim first — then check the claim against the grid, because
+      you now know how.
+    </p>
+
+    <!-- Quiz: exactly 5 questions. Markup contract documented in assets/quiz.js. -->
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">Mid-task, the session announces "all tests pass now" — and you saw no test run. What is this, and what do you do?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Good news worth banking — commit the change now and end the session while it is ahead</button></li>
+            <li><button type="button" data-option="b">A claim, not evidence — run the tests yourself, and treat the moment as a warning sign</button></li>
+            <li><button type="button" data-option="c">Routine behavior — the session watched its own edits land, so the report is reliable</button></li>
+            <li><button type="button" data-option="d">A corrupted session — discard all of the work so far and report the bug to the vendor</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>A3's rule, now with teeth: fluency is free, so a degraded window sounds exactly as sure as a healthy one. Run the check yourself — and if the confident claim was false, count it as one of the three warning signs and weigh a restart.</p>
+        </li>
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">Which of these says the window — not the code, and not the task — is the problem?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The session asks you one clarifying question before it changes the first file</button></li>
+            <li><button type="button" data-option="b">The session reads three project files before it proposes its opening change</button></li>
+            <li><button type="button" data-option="c">The session retries, as if fresh, an approach that you both already watched fail</button></li>
+            <li><button type="button" data-option="d">The session's first fix fails one test, and the session reads the failure output</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Questions, reading, and a first failed try are all healthy work. Repeating a failed approach as if arriving for the first time means the transcript is no longer being attended to — weight without attention, the primer's degradation showing up live.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">Forty minutes in, the signs are firing. Restarting feels like forfeiting everything spent so far. What do the spent tokens actually weigh in the decision?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Nothing — they are gone either way, and the choice only directs where the next tokens go</button></li>
+            <li><button type="button" data-option="b">A lot — forty minutes of context is exactly the knowledge a fresh session will lack</button></li>
+            <li><button type="button" data-option="c">It depends — stay when the spend was large, restart when the spend was still small</button></li>
+            <li><button type="button" data-option="d">Everything — a restart erases the session's commits along with its conversation</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Spent tokens are spent, stay or go. The real comparison is about the next tokens: correction turns stacked on a transcript that taxes each one, versus a fresh window reading the durable state plus a three-sentence brief. The commits and files survive either way.</p>
+        </li>
+        <li class="quiz-question" data-correct="d">
+          <p class="quiz-stem">You open the window bill after a normal build session. What usually holds the most tokens?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Your own messages, since the requests and corrections are what steer every turn</button></li>
+            <li><button type="button" data-option="b">The instructions file, since the session reads the whole file at every turn</button></li>
+            <li><button type="button" data-option="c">The agent's replies, since explaining each change takes more words than making it</button></li>
+            <li><button type="button" data-option="d">What the tools brought back — the files the session read and the output of its runs</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Tool results dominate: file reads, test output, diffs. That is what the window is for — and it is why A6's helper idea and this lesson's restart rule both work, because the expensive part is reading, and reading can be re-done from disk by a fresh window.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">You decide to restart a failing session. What goes into the better brief?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The full transcript, pasted in, so the fresh session loses none of the context</button></li>
+            <li><button type="button" data-option="b">Only what never reached a file: the ask, the approach that failed, the settled calls</button></li>
+            <li><button type="button" data-option="c">Nothing at all, because the instructions file already carries the whole handoff</button></li>
+            <li><button type="button" data-option="d">A warning that the last session failed, so the new one proceeds more carefully</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The files already brief the new session on everything durable — that was A6. Pasting the transcript imports the weight you restarted to shed. What is left is the delta the failing session learned: what you want, what failed, what is already decided. Usually three sentences.</p>
+        </li>
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <!-- Pointer: the optional "apply this to your own work" line. Always last. -->
+    <p class="pointer">Optional: at the end of your next real session, open both bills and ask the same three questions.</p>
+  </main>
+
+  <script>
+// quiz.js — instant-feedback quiz widget. Vanilla JS, no dependencies.
+//
+// Expected markup, one block per lesson:
+//
+//   <section class="quiz" id="quiz">
+//     <h2>Quiz</h2>
+//     <ol class="quiz-questions">
+//       <li class="quiz-question" data-correct="b">
+//         <p class="quiz-stem">Question text?</p>
+//         <ul class="quiz-options">
+//           <li><button type="button" data-option="a">First option</button></li>
+//           <li><button type="button" data-option="b">Second option</button></li>
+//         </ul>
+//         <p class="quiz-feedback" hidden></p>
+//         <p class="quiz-explain" hidden>Why the answer is right.</p>
+//       </li>
+//     </ol>
+//     <p class="quiz-score" hidden></p>
+//   </section>
+//
+// Behavior: the learner clicks one option per question. The widget shows
+// right or wrong at once, reveals the explanation, and locks the question.
+// When every question is answered, the widget shows the score.
+
+(function () {
+  'use strict';
+
+  function answerQuestion(question, button, state) {
+    var correct = question.getAttribute('data-correct');
+    var chosen = button.getAttribute('data-option');
+    var isCorrect = chosen === correct;
+
+    question.querySelectorAll('.quiz-options button').forEach(function (b) {
+      b.disabled = true;
+      if (b.getAttribute('data-option') === correct) {
+        b.classList.add('correct');
+      }
+    });
+    if (!isCorrect) {
+      button.classList.add('incorrect');
+    }
+
+    var feedback = question.querySelector('.quiz-feedback');
+    if (feedback) {
+      feedback.textContent = isCorrect
+        ? 'Correct.'
+        : 'Not quite. The marked option is the answer.';
+      feedback.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+      feedback.hidden = false;
+    }
+
+    var explain = question.querySelector('.quiz-explain');
+    if (explain) {
+      explain.hidden = false;
+    }
+
+    state.answered += 1;
+    if (isCorrect) {
+      state.correct += 1;
+    }
+    if (state.answered === state.total && state.scoreEl) {
+      state.scoreEl.textContent =
+        'Score: ' + state.correct + ' of ' + state.total + '.';
+      state.scoreEl.hidden = false;
+    }
+  }
+
+  function initQuiz(quiz) {
+    var questions = quiz.querySelectorAll('.quiz-question');
+    var state = {
+      total: questions.length,
+      answered: 0,
+      correct: 0,
+      scoreEl: quiz.querySelector('.quiz-score')
+    };
+
+    questions.forEach(function (question) {
+      question.querySelectorAll('.quiz-options button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          answerQuestion(question, button, state);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.quiz').forEach(initQuiz);
+  });
+})();
+</script>
+</body>
+</html>
