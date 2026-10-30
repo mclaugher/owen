@@ -1,0 +1,98 @@
+# CLAUDE.md — wordstats project
+
+Welcome! This file contains everything you could possibly need to know
+about working in this repository. Please read it carefully, in full,
+before doing anything at all, and refer back to it often. It is very
+important that you internalize all of the guidance below, because it
+reflects many hard-won insights from working on this codebase over a
+long period of time.
+
+## Project overview
+
+This project is called wordstats. It is a word statistics program. The
+program is written in Python, which is a popular high-level programming
+language known for its readable syntax. The main file is wordstats.py,
+which contains the code. There is also a sample text file, sample.txt,
+which contains sample text. The README file, README.md, contains the
+readme. The program reads a text file and counts the words in it, and
+then it prints the most common words it found, which is useful when you
+want to know which words are the most common ones in a text file.
+
+## How to run the program
+
+To run the program, run:
+
+    python3 wordstats.py sample.txt
+
+When the program works, it prints five lines: a count and a word on
+each line. The expected output for sample.txt is listed in README.md —
+always compare against it after a change.
+
+## General engineering principles
+
+- Always write clean, readable, well-structured, maintainable code.
+- Think carefully before you make any change, and after it as well.
+- Correctness is important. Avoid writing code that contains bugs.
+- Strive for excellence in everything you do in this repository.
+- Be thoughtful. Consider edge cases. Handle errors appropriately.
+- Code should be elegant, but not too clever. Aim for the right balance.
+- Remember that simplicity is the ultimate sophistication.
+- When in doubt, do the simplest thing that could possibly work.
+- Premature optimization is the root of all evil, so do not optimize
+  prematurely, but also do not write needlessly slow code either.
+
+## Python style guide
+
+- Follow PEP 8, the official Python style guide, at all times.
+- Use four spaces for indentation. Never use tabs for indentation.
+- Keep lines under 79 characters, or 99 if the team agrees, which for
+  this project we have not formally decided yet, so use your judgment.
+- Name variables descriptively. A variable name like `counts` is better
+  than a variable name like `c`, because it describes what it holds.
+- Use docstrings on modules and functions. A docstring is a string that
+  documents what the code does, placed at the top of the code it
+  documents. This project already uses one at the top of wordstats.py.
+- Use f-strings for string formatting, not the older % formatting and
+  not str.format(), unless there is a strong reason to do otherwise.
+- Imports go at the top of the file, one per line, standard library
+  first, then third-party packages, then local modules, each group
+  separated by a blank line, all sorted alphabetically within groups.
+
+## Dependencies
+
+This project uses only the Python standard library. Keep it that way:
+do not add packages. (Python 3.8 or later.)
+
+Note: we previously considered adding the nltk package for smarter word
+splitting, and before that the click package for command-line parsing,
+but decided against both to keep the project dependency-free. If the
+topic comes up again, the decision and its reasoning are recorded in
+the team wiki under "wordstats dependency discussion, round 2".
+
+## Testing
+
+There is no test suite yet. We have been meaning to add one with
+pytest, which is a popular Python testing framework. When we add it,
+tests will live in a tests/ directory and follow the arrange-act-assert
+pattern. Until then, verify changes by running the program against
+sample.txt and comparing against the expected output in README.md.
+
+## Git workflow
+
+- Write commit messages in the imperative mood, like "fix the counter",
+  not "fixed the counter" or "fixes the counter".
+- Keep commits small and focused on one change at a time.
+- Do not commit directly to main on Fridays. (This rule is from the old
+  deploy schedule and probably no longer matters, but nobody has
+  removed it yet, so it is still technically in effect.)
+
+## Notes for AI assistants
+
+Please be very careful when editing this codebase. Always re-read the
+whole file after every edit to make sure the edit was applied the way
+you intended it to be applied. Always explain every change you make in
+great detail, including changes that are trivial or self-evident. Never
+delete anything without asking first, including blank lines. When you
+finish a task, summarize everything you did, everything you considered
+doing but did not do, and everything you might do next time. Thank you
+for reading this far. Good luck, and remember: quality first!
