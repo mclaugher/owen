@@ -290,10 +290,15 @@ pre code { padding: 0; background: none; }
         (Windows installers are on the same page), then confirm with
         <code>claude --version</code>. Start a session by running
         <code>claude</code> from inside the practice folder; the first run
-        walks you through signing in. The session starts in a mode that
-        asks before most actions &mdash; for this exercise, answer the
-        prompts one by one. <code>Shift+Tab</code> cycles the permission
-        modes from <a href="0002-scoping-and-modes.html">A2</a>.
+        walks you through signing in. Per the
+        <a href="https://code.claude.com/docs/en/permission-modes">permission-modes docs</a>,
+        a new interactive session starts in <code>auto</code> mode, where
+        a second model approves routine actions instead of you. For this
+        exercise, press <code>Shift+Tab</code> until the status bar shows
+        <code>⏸ manual mode on</code> &mdash; the mode that asks before
+        most actions &mdash; and answer the prompts one by one.
+        <code>Shift+Tab</code> cycles the permission modes from
+        <a href="0002-scoping-and-modes.html">A2</a>.
       </p>
     </aside>
 
@@ -545,8 +550,10 @@ pre code { padding: 0; background: none; }
       matches the practice folder's actual risk &mdash; a throwaway
       project with fast feedback &mdash; and adapt it. Create the settings
       file inside the practice folder, start a fresh session, and ask the
-      agent to run the program: with a matching allow rule, the prompt you
-      answered in your first win does not appear. Then write one sentence,
+      agent to run the program. Your settings file holds the session in
+      the mode that asks, so the silence means something: with a matching
+      allow rule, the prompt you answered in your first win does not
+      appear. Then write one sentence,
       to yourself, naming why this setup fits this work. That sentence is
       the A2 habit &mdash; mode matched to risk, not to patience &mdash;
       and it is the sentence you will reuse on your real repo, where the
