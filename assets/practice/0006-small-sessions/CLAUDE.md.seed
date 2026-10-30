@@ -1,0 +1,7 @@
+# Practice folder rules
+
+- Run the tests with `python3 -m unittest -v`.
+- Work is done only when the test run ends with `OK`.
+- Standard library only. Add no dependency.
+- When `PLAN.md` exists, read it before you change any code.
+- New behavior needs a new test in `test_tally.py`.

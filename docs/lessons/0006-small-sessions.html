@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="lesson-number" content="0006">
+  <title>0006 · Small Sessions</title>
+  <style>
+/* lesson.css — shared visual language for every lesson page and the index.
+   Inlined into each lesson by scripts/inline.py at generation time. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --accent: #0b5fa5;
+  --border: #d0d0d0;
+  --callout-bg: #f3f7fb;
+  --callout-border: #0b5fa5;
+  --correct: #176b37;
+  --correct-bg: #e8f5ec;
+  --incorrect: #9c2b2b;
+  --incorrect-bg: #faecec;
+  --code-bg: #f4f4f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181b;
+    --fg: #e6e6e6;
+    --muted: #a5a5a5;
+    --accent: #6cb2e8;
+    --border: #3a3f44;
+    --callout-bg: #1c2733;
+    --callout-border: #6cb2e8;
+    --correct: #7fd49a;
+    --correct-bg: #19291e;
+    --incorrect: #e89a9a;
+    --incorrect-bg: #2e1b1b;
+    --code-bg: #22262a;
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--accent); }
+
+code, pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+}
+
+code { padding: 0.1em 0.3em; border-radius: 3px; }
+
+pre {
+  padding: 0.9rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+pre code { padding: 0; background: none; }
+
+.lesson-meta {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Dated callout: the only place for version-sensitive facts.
+   The date slot stays visible so the reader can judge staleness. */
+.dated-callout {
+  border-left: 4px solid var(--callout-border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.dated-callout .callout-date {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+/* Quiz */
+.quiz {
+  border-top: 2px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.quiz-question { margin-bottom: 1.75rem; }
+
+.quiz-stem { font-weight: 600; }
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.quiz-options li { margin: 0.35rem 0; }
+
+.quiz-options button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover:enabled { border-color: var(--accent); }
+
+.quiz-options button:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-options button.correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.quiz-options button.incorrect {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.quiz-feedback { font-weight: 600; }
+
+.quiz-feedback.is-correct { color: var(--correct); }
+
+.quiz-feedback.is-incorrect { color: var(--incorrect); }
+
+.quiz-explain { color: var(--muted); }
+
+.quiz-score {
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* Pointer: the optional "apply this to your own work" line. */
+.pointer {
+  margin-top: 2.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  html { background: #ffffff; color: #000000; }
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  .quiz-options button { border: 1px solid #888888; }
+  .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .pointer { border: 1pt dashed #000000; }
+  a { color: #000000; }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Small Sessions</h1>
+    <p class="lesson-meta">Track A · lesson 0006 · about 20 minutes</p>
+  </header>
+
+  <main>
+    <p>
+      <a href="0005-guardrails-and-add-ons.html">A5</a> left you with
+      machinery: a guardrail in a settings file, a lean instructions
+      file, a judged add-on. Now the question that machinery answers:
+      if you close the session right now, what do you lose? The reflex
+      says "everything &mdash; it already knows the project." Count
+      what it actually knows. The instructions file: on disk. The
+      settings and the guardrail: on disk. The code, the fixes, the
+      tests: on disk, in commits. What dies with the session is the
+      conversation &mdash; and by the time you feel loyal to a long
+      session, the conversation is mostly weight. This lesson teaches
+      you to end sessions on purpose. Three habits: one task per
+      session, the plan in a file, commits as save points.
+    </p>
+
+    <h2>One task, one session</h2>
+    <p>
+      The primer gave you the budget: everything in the window is paid
+      for on every turn, and the window degrades as it fills &mdash;
+      the agent weighs more and attends less. Now watch what a long
+      session does to that budget. You finish task A: the diffs it
+      read, the wrong turn it took, the test output it studied &mdash;
+      all of it still sits in the window. Start task B in the same
+      session and every turn of B re-pays for the full transcript of
+      A. None of A helps B. All of A taxes B.
+    </p>
+    <p>
+      "But it already knows the project." Split that knowledge in two.
+      The part worth keeping &mdash; how to run the tests, what the
+      rules are, what the code does &mdash; lives in the instructions
+      file, the settings, and the code itself. A fresh session reads
+      those at the start, every time, for a fraction of what a stale
+      transcript costs. The other part &mdash; the conversational
+      residue of finished work &mdash; is the part a fresh start
+      sheds, and it is the part you were paying for. So the habit:
+      <strong>when the task ends, end the session.</strong> A new
+      session arrives knowing everything durable and carrying nothing
+      stale. Ending a session is not losing work. It is shedding
+      weight the files never carried.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        The Claude Code session commands, per the
+        <a href="https://code.claude.com/docs/en/commands">commands
+        reference</a> and the
+        <a href="https://code.claude.com/docs/en/cli-reference">CLI
+        reference</a>. <code>/clear</code> starts a new conversation
+        with empty context &mdash; your instructions file and settings
+        still load, because they live on disk. Pass a name
+        (<code>/clear report-done</code>) to label the finished
+        conversation in the <code>/resume</code> picker.
+        <code>/resume</code> returns to an earlier conversation when
+        you genuinely need one back. From the terminal,
+        <code>claude -c</code> continues the most recent conversation
+        in the current directory, and
+        <code>claude -r "&lt;name&gt;"</code> resumes one by ID or
+        name. <code>/compact</code> frees context mid-task by
+        summarizing the conversation so far &mdash; the half-measure
+        for the rare task that truly outgrows one window.
+      </p>
+    </aside>
+
+    <h2>Write the plan into a file</h2>
+    <p>
+      <a href="0002-scoping-and-modes.html">A2</a> taught you to
+      demand a plan before code. That plan lived in the window: you
+      read it, approved it, and the same session built it. Fine for
+      one sitting &mdash; but the moment a task spans two sessions,
+      a plan in the window is a plan in the part that dies. So move
+      it: <strong>have the session write the plan into a file.</strong>
+      A good plan file reads like a brief you would hand a colleague:
+      the steps in order, the files each step touches, the decisions
+      already made, and the command that proves the work done.
+    </p>
+    <p>
+      The plan file splits one task into two small sessions. The
+      <em>plan session</em> reads a lot &mdash; the code, the request,
+      the constraints &mdash; and writes one small file. The
+      <em>build session</em> starts fresh, reads that small file, and
+      spends its whole window on the work. Each session stays light,
+      and the handoff between them is exact, because nothing travels
+      by memory. The same file pays off in every direction: tomorrow-you
+      picks it up, a teammate picks it up, a different tool picks it
+      up. Durable state beats a long conversation every time someone
+      new has to arrive.
+    </p>
+
+    <h2>Commits are save points</h2>
+    <p>
+      You use git every day; agent work gives commits one more job.
+      A commit is a <strong>save point</strong>: a state you know is
+      good, cheap to return to. Commit before you let a session
+      change anything, and reviewing the session's work becomes one
+      <code>git diff</code> &mdash; and retreating from it becomes
+      one restore, instead of an argument with the agent about
+      undoing itself. Commit again at each working state &mdash; plan
+      written, tests green &mdash; and a bad change costs only the
+      distance back to the last save point, never the day.
+    </p>
+    <p>
+      Between sessions, the save points and the plan file are the
+      whole handoff. The build session reads the plan, runs the
+      check command, and sees in the history exactly how far the
+      work got. Nothing needs re-explaining, because nothing
+      important was ever only said.
+    </p>
+    <p>
+      One more way to keep a session small &mdash; named here, taught
+      in a later course. The main session can send out a
+      <strong>helper</strong>: a second, short-lived session that
+      goes and reads the big thing &mdash; a sprawling codebase, a
+      long log &mdash; in a window of its own, and hands back only a
+      summary. The main session pays for the summary, not the
+      reading. That is the whole idea; depth comes later.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        In Claude Code, the helper is a <strong>subagent</strong>,
+        per the
+        <a href="https://code.claude.com/docs/en/sub-agents">subagents
+        docs</a>: each subagent runs in its own context window and
+        returns only its result to the main conversation. A built-in
+        subagent named Explore handles read-only codebase search.
+        <code>/agents</code> is the starting point for managing them.
+      </p>
+    </aside>
+
+    <h2>The exercise: one task, two sessions</h2>
+    <p>
+      The practice folder below holds a small expense tracker,
+      <code>tally.py</code>, with four passing tests in
+      <code>test_tally.py</code>. Nothing is broken &mdash; a first
+      for this course. The task is a new feature, sized so that
+      planning it is real work: a <code>report</code> command, specified
+      in <code>README.md</code>, with two decisions deliberately left
+      open. You will do the task across two sessions that never meet.
+    </p>
+
+    <section class="practice-download" id="practice-download">
+  <h2>Practice folder</h2>
+  <p>Download the practice folder, then unzip it next to your other projects. The button works offline. Download it again for a fresh copy.</p>
+  <p><button type="button" id="practice-download-btn">Download 0006-small-sessions-practice.zip</button></p>
+  <script>
+  (function () {
+    var data = "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";
+    document.getElementById("practice-download-btn").addEventListener("click", function () {
+      var bin = atob(data);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var url = URL.createObjectURL(new Blob([bytes], { type: "application/zip" }));
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "0006-small-sessions-practice.zip";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    });
+  })();
+  </script>
+</section>
+
+    <p><strong>The exercise</strong> &mdash; six steps, about twelve
+    minutes:</p>
+    <ol>
+      <li>
+        <strong>Download and read.</strong> The button above saves the
+        folder <code>0006-small-sessions</code>. Inside:
+        <code>README.md</code>, <code>tally.py</code>,
+        <code>test_tally.py</code>, and a lean <code>CLAUDE.md</code>.
+        Read <code>README.md</code>: the <code>report</code> command,
+        its ordering rules, and the two open decisions it leaves to
+        your plan.
+      </li>
+      <li>
+        <strong>Make save point zero.</strong> In the folder, run
+        <code>git init</code>, add everything, and commit. This one
+        is yours by hand &mdash; you know git. From here on, every
+        agent change is one <code>git diff</code> away from review
+        and one restore away from gone.
+      </li>
+      <li>
+        <strong>Session one: the plan.</strong> Start a session in
+        the folder, in the mode that asks. Ask for exactly one
+        product: "Read README.md and write a plan for the report
+        command to PLAN.md. Change nothing else." The plan must name
+        the steps in order, the files each step touches
+        (<code>tally.py</code>, <code>test_tally.py</code>), the two
+        open decisions decided, and the check command. Review the
+        plan like A3 taught you &mdash; every step should name a file
+        and a way to check it. Then end the session. Its entire
+        product is one small file.
+      </li>
+      <li>
+        <strong>Commit the plan.</strong> A plan is work. Save it
+        like work.
+      </li>
+      <li>
+        <strong>Session two: the build.</strong> Start a fresh
+        session in the same folder &mdash; this one has never heard
+        of session one. Say: "Read PLAN.md and carry it out." Watch
+        the start closely: the new session reads
+        <code>CLAUDE.md</code>, reads <code>PLAN.md</code>, and
+        arrives fully briefed &mdash; you retyped nothing. Review the
+        diff, then run <code>python3 -m unittest -v</code>: at least
+        two new <code>report</code> tests, and the run ends
+        <code>OK</code>.
+      </li>
+      <li>
+        <strong>Commit the result.</strong> Then notice what the
+        handoff cost you: zero re-explaining. Session two knew
+        nothing about session one, and it did not need to &mdash;
+        everything that mattered was in files.
+      </li>
+    </ol>
+    <p>
+      That is the habit at full size. On a real task the plan session
+      might read for ten minutes and the build session might run for
+      an hour, but the shape is identical: read a lot, write a small
+      brief, start fresh, build from the brief, commit at every
+      working state.
+    </p>
+
+    <h2>Keep going</h2>
+    <p>
+      Two primary sources back this lesson's callouts: the
+      <a href="https://code.claude.com/docs/en/commands">commands
+      reference</a> for what each session command does, and the
+      <a href="https://code.claude.com/docs/en/sub-agents">subagents
+      docs</a> for how helpers keep a window small. And the standing
+      reminder: the agent is your teacher. Paste your PLAN.md into a
+      fresh session and ask what a stranger to the task would find
+      missing &mdash; that is exactly what session two was.
+    </p>
+
+    <!-- Quiz: exactly 5 questions. Markup contract documented in assets/quiz.js. -->
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">Task A is done and committed. Task B waits. The session has been flawless all morning. What now?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Keep the session, because a session this good is rare and worth preserving</button></li>
+            <li><button type="button" data-option="b">Keep the session, and paste in task B's files so the window holds both tasks</button></li>
+            <li><button type="button" data-option="c">End the session and start fresh, because task A's transcript is now pure weight</button></li>
+            <li><button type="button" data-option="d">End the session only once the tool warns that the window is almost entirely full</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Everything worth keeping — the code, the commits, the instructions file — is on disk and greets the next session. The finished task's transcript helps task B not at all and taxes its every turn, so a flawless morning is exactly the right time to stop.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">You end a session and start a new one. What actually carries over?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Every file on disk: the code, the commits, the instructions file, the settings</button></li>
+            <li><button type="button" data-option="b">Nothing at all, which is why ending a session means losing that session's work</button></li>
+            <li><button type="button" data-option="c">The conversation, which the tool replays quietly into the new session's window</button></li>
+            <li><button type="button" data-option="d">Whatever the old session decides to hand forward in its final reply to you</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The window dies with the session; the disk does not. The new session re-reads the durable state — instructions file, settings, code, history — at the start. That split is the whole lesson: durable knowledge lives in files, and only the conversation is disposable.</p>
+        </li>
+        <li class="quiz-question" data-correct="d">
+          <p class="quiz-stem">A2 taught you to demand a plan before code. Why move that plan from the window into a file?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">A written plan comes out shorter, because writing forces more care than chat</button></li>
+            <li><button type="button" data-option="b">The agent follows a file more faithfully than the same words typed in chat</button></li>
+            <li><button type="button" data-option="c">A plan in a file costs the build session no tokens at all when it reads it</button></li>
+            <li><button type="button" data-option="d">The window dies with the session, and a file briefs the next session exactly</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>A plan in the window is a plan in the part that dies. A file is durable state: the build session, tomorrow-you, or a teammate reads the same exact brief. Reading the file still costs tokens — it is just a far smaller spend than dragging a whole transcript along.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">Where do commits fit into a session's work?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Commit once at the end of the day, so the history stays short and readable</button></li>
+            <li><button type="button" data-option="b">Commit at each working state, so a bad change costs only the distance back</button></li>
+            <li><button type="button" data-option="c">Commit before reviewing, so the diff folds into history while it is small</button></li>
+            <li><button type="button" data-option="d">Let the session commit when it judges best, since it sees the whole diff</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>A commit is a save point: a known-good state that makes review one diff and retreat one restore. Commit before the agent touches anything and again at each working state — then the worst change ever costs the distance to the last save point, not the day.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">Why does sending a helper to read a sprawling codebase keep the main session small?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">The helper reads far faster, so the whole job takes fewer turns to finish</button></li>
+            <li><button type="button" data-option="b">The helper spends its own window on the reading and returns only a summary</button></li>
+            <li><button type="button" data-option="c">The helper remembers the files, so later sessions never pay to read them</button></li>
+            <li><button type="button" data-option="d">The helper works without permission checks, so no tokens go to approvals</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The helper runs in a window of its own. Everything it reads is paid for there and discarded with it; the main session pays only for the summary that comes back. Same budget logic as the whole lesson — keep the expensive reading out of the window you are working in.</p>
+        </li>
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <!-- Pointer: the optional "apply this to your own work" line. Always last. -->
+    <p class="pointer">Optional: split your next real task into two sessions — one that ends with a plan file, and one that starts by reading it.</p>
+  </main>
+
+  <script>
+// quiz.js — instant-feedback quiz widget. Vanilla JS, no dependencies.
+//
+// Expected markup, one block per lesson:
+//
+//   <section class="quiz" id="quiz">
+//     <h2>Quiz</h2>
+//     <ol class="quiz-questions">
+//       <li class="quiz-question" data-correct="b">
+//         <p class="quiz-stem">Question text?</p>
+//         <ul class="quiz-options">
+//           <li><button type="button" data-option="a">First option</button></li>
+//           <li><button type="button" data-option="b">Second option</button></li>
+//         </ul>
+//         <p class="quiz-feedback" hidden></p>
+//         <p class="quiz-explain" hidden>Why the answer is right.</p>
+//       </li>
+//     </ol>
+//     <p class="quiz-score" hidden></p>
+//   </section>
+//
+// Behavior: the learner clicks one option per question. The widget shows
+// right or wrong at once, reveals the explanation, and locks the question.
+// When every question is answered, the widget shows the score.
+
+(function () {
+  'use strict';
+
+  function answerQuestion(question, button, state) {
+    var correct = question.getAttribute('data-correct');
+    var chosen = button.getAttribute('data-option');
+    var isCorrect = chosen === correct;
+
+    question.querySelectorAll('.quiz-options button').forEach(function (b) {
+      b.disabled = true;
+      if (b.getAttribute('data-option') === correct) {
+        b.classList.add('correct');
+      }
+    });
+    if (!isCorrect) {
+      button.classList.add('incorrect');
+    }
+
+    var feedback = question.querySelector('.quiz-feedback');
+    if (feedback) {
+      feedback.textContent = isCorrect
+        ? 'Correct.'
+        : 'Not quite. The marked option is the answer.';
+      feedback.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+      feedback.hidden = false;
+    }
+
+    var explain = question.querySelector('.quiz-explain');
+    if (explain) {
+      explain.hidden = false;
+    }
+
+    state.answered += 1;
+    if (isCorrect) {
+      state.correct += 1;
+    }
+    if (state.answered === state.total && state.scoreEl) {
+      state.scoreEl.textContent =
+        'Score: ' + state.correct + ' of ' + state.total + '.';
+      state.scoreEl.hidden = false;
+    }
+  }
+
+  function initQuiz(quiz) {
+    var questions = quiz.querySelectorAll('.quiz-question');
+    var state = {
+      total: questions.length,
+      answered: 0,
+      correct: 0,
+      scoreEl: quiz.querySelector('.quiz-score')
+    };
+
+    questions.forEach(function (question) {
+      question.querySelectorAll('.quiz-options button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          answerQuestion(question, button, state);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.quiz').forEach(initQuiz);
+  });
+})();
+</script>
+</body>
+</html>
