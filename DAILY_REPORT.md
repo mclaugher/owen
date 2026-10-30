@@ -1,14 +1,14 @@
-# Daily report — 2026-10-29
+# Daily report — 2026-10-30
 
-## Merged since the last report (2026-10-16)
+## Merged since the last report (2026-10-29)
 
 | PR | Merged | Title | Plan task |
 |----|--------|-------|-----------|
-| #8 | 2026-10-16 | feat: generate A3 reviewing-agent-output lesson 0003 | old plan, task 7 |
-| #9 | 2026-10-16 | Task 8: Site index, QA pass, changelog | old plan, task 8 |
-| #10 | 2026-10-28 | plan: Track A applied phase (lessons 4–7) | plan replacement (human design session) |
+| #12 | 2026-10-29 | feat: practice-folder packer and download-block check | task 1 |
+| #13 | 2026-10-29 | feat: banned-word list and plain-language check | task 2 |
+| #14 | 2026-10-29 | docs: teach-curriculum fork covers post-access lessons | task 3 |
 
-v0.1.0 is complete. PR #10 installed the new PLAN.md (tasks 1–8 toward lessons 0004–0007), decisions D31–D36, six new review-guideline lines, and archived the v0.1.0 ledger to `review/PROGRESS-v0.1.0.md`.
+Waves 1 and 2 of the applied-phase plan are complete. Every merge maps to a plan task; no scope creep and no reverts. Task 3's branch (PR #14) resolved a DECISIONS.md numbering collision when it merged main after #13 landed (task 3's entry became D38) — bookkeeping only.
 
 ## Open PRs awaiting human merge
 
@@ -16,14 +16,16 @@ None besides this housekeeping PR.
 
 ## Blocked tasks
 
-None. No task in the new plan has started. Task 1 (practice-folder packer) is next and unblocked.
+None. Task 4 (generate lesson 0004 — first win, then make it yours) is next: its dependencies (tasks 2 and 3) both merged, so the dev loop can start the first lesson of the applied phase.
 
 ## Guideline additions from the review loop
 
-None since the last report. REVIEW_GUIDELINES.md gained six lines on 2026-10-28, but they came from the design-session plan PR (#10), not the review loop: the packed download block on post-access pages (D32), the `.seed` suffix rule, the banned-word and define-on-first-use checks (D34), exercises must name their practice files, no token ranges or learner comparisons in Track A (D33), and lesson PR bodies must record the solved exercise.
+This PR's own review rounds added two lines to REVIEW_GUIDELINES.md:
+
+1. A report or ledger claim that git history contradicts (wrong PR, commit, or date) is a rejection; verify attributions against `git log` (f9af3fb).
+2. A report claim that the PR's own final diff contradicts is a rejection; a fix or guideline commit on a report PR must update the report it invalidates (4ad38a5).
 
 ## Look at first
 
-1. **v0.1.0 release steps are still open.** The repo has no GitHub Pages site (the API returns 404) and no tags. The v0.1.0 ledger listed "enable GitHub Pages from docs/ on main, tag the release" as the remaining human steps.
-2. **PROGRESS.md was reset without compaction.** PR #10 archived the old ledger but left the Summary empty. This housekeeping pass rolled the still-binding v0.1.0 notes (inliner draft rule, 1M-window fact, print caveat, open release steps) into the Summary so dev sessions keep them.
-3. **The dev loop has not started the applied phase.** The plan merged the evening of 2026-10-28; there are no task commits since.
+1. **v0.1.0 release steps are still open (second reminder).** No GitHub Pages site (API returns 404) and no tags. The human steps remain: enable Pages from `docs/` on main, then tag v0.1.0.
+2. **Lesson generation starts next.** Task 4 is the first task that produces learner-facing text under the new banned-word check and the updated teach-curriculum skill. Worth a closer human read of that PR than the tooling PRs got.
