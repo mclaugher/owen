@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="lesson-number" content="0004">
+  <title>0004 · First Win, Then Make It Yours</title>
+  <style>
+/* lesson.css — shared visual language for every lesson page and the index.
+   Inlined into each lesson by scripts/inline.py at generation time. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --accent: #0b5fa5;
+  --border: #d0d0d0;
+  --callout-bg: #f3f7fb;
+  --callout-border: #0b5fa5;
+  --correct: #176b37;
+  --correct-bg: #e8f5ec;
+  --incorrect: #9c2b2b;
+  --incorrect-bg: #faecec;
+  --code-bg: #f4f4f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15181b;
+    --fg: #e6e6e6;
+    --muted: #a5a5a5;
+    --accent: #6cb2e8;
+    --border: #3a3f44;
+    --callout-bg: #1c2733;
+    --callout-border: #6cb2e8;
+    --correct: #7fd49a;
+    --correct-bg: #19291e;
+    --incorrect: #e89a9a;
+    --incorrect-bg: #2e1b1b;
+    --code-bg: #22262a;
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.25;
+  margin-top: 2rem;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.1rem; }
+
+a { color: var(--accent); }
+
+code, pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+}
+
+code { padding: 0.1em 0.3em; border-radius: 3px; }
+
+pre {
+  padding: 0.9rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+pre code { padding: 0; background: none; }
+
+.lesson-meta {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Dated callout: the only place for version-sensitive facts.
+   The date slot stays visible so the reader can judge staleness. */
+.dated-callout {
+  border-left: 4px solid var(--callout-border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.dated-callout .callout-date {
+  display: block;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+/* Quiz */
+.quiz {
+  border-top: 2px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.quiz-question { margin-bottom: 1.75rem; }
+
+.quiz-stem { font-weight: 600; }
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.quiz-options li { margin: 0.35rem 0; }
+
+.quiz-options button {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-options button:hover:enabled { border-color: var(--accent); }
+
+.quiz-options button:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-options button.correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.quiz-options button.incorrect {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.quiz-feedback { font-weight: 600; }
+
+.quiz-feedback.is-correct { color: var(--correct); }
+
+.quiz-feedback.is-incorrect { color: var(--incorrect); }
+
+.quiz-explain { color: var(--muted); }
+
+.quiz-score {
+  font-weight: 600;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+/* Pointer: the optional "apply this to your own work" line. */
+.pointer {
+  margin-top: 2.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Print */
+@media print {
+  html { background: #ffffff; color: #000000; }
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  .quiz-options button { border: 1px solid #888888; }
+  .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .pointer { border: 1pt dashed #000000; }
+  a { color: #000000; }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>First Win, Then Make It Yours</h1>
+    <p class="lesson-meta">Track A · lesson 0004 · about 20 minutes</p>
+  </header>
+
+  <main>
+    <p>
+      The pre-access core ended with a full head. You left
+      <a href="0003-reviewing-agent-output.html">A3</a> carrying the scoping
+      rules, the mode ladder, and the review checklist &mdash; and if you
+      started a session right now, you would open it by typing all of that
+      back in: run the tests like this, never touch that directory, prove
+      the fix with a failing test. By the third session the retyping is a
+      tax. Here is the release: <strong>the checklist you keep retyping is
+      configuration waiting to be written down.</strong> Tool access starts
+      in this lesson, and so does your setup. First, though, you have ten
+      minutes of credit to collect.
+    </p>
+
+    <h2>Your first win</h2>
+    <p>
+      No teaching yet. The practice folder below holds a tiny Python
+      program, <code>wordstats.py</code>, that reads a text file and prints
+      its five most common words. It has one bug, and the bug crashes the
+      program with a clear error. This is the shape A1 called a first win:
+      bounded scope, checkable outcome, small context footprint. It is
+      deliberately beneath your ability &mdash; the point is to watch the
+      loop run end to end, not to be impressed.
+    </p>
+
+    <section class="practice-download" id="practice-download">
+  <h2>Practice folder</h2>
+  <p>Download the practice folder, then unzip it next to your other projects. The button works offline. Download it again for a fresh copy.</p>
+  <p><button type="button" id="practice-download-btn">Download 0004-first-win-and-your-setup-practice.zip</button></p>
+  <script>
+  (function () {
+    var data = "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";
+    document.getElementById("practice-download-btn").addEventListener("click", function () {
+      var bin = atob(data);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var url = URL.createObjectURL(new Blob([bytes], { type: "application/zip" }));
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "0004-first-win-and-your-setup-practice.zip";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    });
+  })();
+  </script>
+</section>
+
+    <p>Five steps, about ten minutes:</p>
+    <ol>
+      <li>
+        <strong>Download and unzip.</strong> The button above saves the
+        folder <code>0004-first-win-and-your-setup</code>. Inside:
+        <code>README.md</code>, <code>wordstats.py</code>,
+        <code>sample.txt</code>, and a <code>CLAUDE.md</code> you will meet
+        later in this lesson.
+      </li>
+      <li>
+        <strong>Reproduce the crash.</strong> <code>README.md</code> gives
+        the run command. Run it and read the error &mdash; the message
+        names the file, the line, and the failing operation.
+      </li>
+      <li>
+        <strong>Hand the agent the error.</strong> Start a session in the
+        folder. Paste the full error output, then ask for two things: the
+        fix, and the reason the crash happens. A one-line fix you
+        understand beats a one-line fix you accept.
+      </li>
+      <li>
+        <strong>Verify like A3 taught you.</strong> Claims are not
+        evidence. Read the diff &mdash; it should be small. Re-run the
+        program yourself and compare against the expected output printed
+        in <code>README.md</code>. The check was named before the session
+        started, which is exactly what makes this task a first win.
+      </li>
+      <li>
+        <strong>Close the loop.</strong> When the output matches, you have
+        run the whole cycle from A1 through A3 on real files: scoped task,
+        granted mode, verified result. That cycle is the product. Keep the
+        folder; the rest of the lesson works inside it.
+      </li>
+    </ol>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        In Claude Code, per the
+        <a href="https://code.claude.com/docs/en/quickstart">quickstart</a>:
+        install on macOS, Linux, or WSL with
+        <code>curl -fsSL https://claude.ai/install.sh | bash</code>
+        (Windows installers are on the same page), then confirm with
+        <code>claude --version</code>. Start a session by running
+        <code>claude</code> from inside the practice folder; the first run
+        walks you through signing in. Per the
+        <a href="https://code.claude.com/docs/en/permission-modes">permission-modes docs</a>,
+        a new interactive session starts in <code>auto</code> mode, where
+        a second model approves routine actions instead of you. For this
+        exercise, press <code>Shift+Tab</code> until the status bar shows
+        <code>⏸ manual mode on</code> &mdash; the mode that asks before
+        most actions &mdash; and answer the prompts one by one.
+        <code>Shift+Tab</code> cycles the permission modes from
+        <a href="0002-scoping-and-modes.html">A2</a>.
+      </p>
+    </aside>
+
+    <h2>The file every session reads first</h2>
+    <p>
+      Now the lesson. The primer established that every session starts with
+      an empty window and forgets everything when it ends. Your scoping
+      rules, your run commands, your "never touch that directory" &mdash;
+      none of it survives into the next session unless something carries
+      it. The carrier is a plain text file at the root of your project that
+      the agent reads at the start of every session, before you type a
+      word. Write an instruction there once and every future session opens
+      already knowing it.
+    </p>
+    <p>
+      What belongs in the file is defined by the tax it removes:
+      <strong>the rules and checks you would otherwise retype.</strong>
+      The run command. The command that proves work is done. The rule the
+      code cannot show, like "standard library only, by decision, not by
+      accident." The convention a new contributor would have to be told.
+      If you have ever corrected the agent twice for the same thing, that
+      correction is a line in this file.
+    </p>
+    <p>
+      What does not belong is defined by the primer. The file loads into
+      the context window of <em>every</em> session, so every line is a
+      cost you pay again on every start &mdash; a 400-line file taxes a
+      two-minute session as heavily as a two-hour one. And the file is
+      context, not a contract: the agent weighs it the way it weighs any
+      instruction, and a bloated file buries the five lines that matter
+      under ninety that do not. Three kinds of bloat to refuse:
+    </p>
+    <ul>
+      <li>
+        <strong>Restated defaults.</strong> "Write clean, readable code"
+        changes nothing. The agent was not planning to write dirty code,
+        and the sentence spends tokens to say so.
+      </li>
+      <li>
+        <strong>What the code already shows.</strong> The agent reads your
+        files. A paragraph explaining that <code>wordstats.py</code>
+        contains the code is paid for twice and needed zero times.
+      </li>
+      <li>
+        <strong>Rules nobody enforces anymore.</strong> Dead rules rot
+        trust in the live ones. If a line no longer binds, delete it.
+      </li>
+    </ul>
+    <p>
+      One more boundary, and it matters: an instruction in this file is
+      something the agent <em>reads</em>, not something the tool
+      <em>enforces</em>. "Never delete the data directory" written in
+      prose is a strong hint, not a lock. For rules that must never break,
+      the tool has enforcement machinery &mdash; that is the next lesson.
+      The settings below are your first taste of it.
+    </p>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        In Claude Code this file is <code>CLAUDE.md</code>, per the
+        <a href="https://code.claude.com/docs/en/memory">memory docs</a>:
+        a project file lives at <code>./CLAUDE.md</code> (or
+        <code>./.claude/CLAUDE.md</code>) and is committed for the team; a
+        personal file at <code>~/.claude/CLAUDE.md</code> loads in all your
+        projects; a gitignored <code>CLAUDE.local.md</code> holds private
+        per-project notes. The docs recommend keeping each file under
+        about 200 lines, note that longer files reduce adherence, and
+        state the file is "context, not enforced configuration." Run
+        <code>/init</code> to generate a starter file and
+        <code>/context</code> to confirm what loaded. A repository that
+        already has an <code>AGENTS.md</code> works too.
+      </p>
+    </aside>
+
+    <h2>Permission settings: three worked setups</h2>
+    <p>
+      The instructions file carries what you would otherwise retype. A
+      settings file carries what you would otherwise re-click. In A2 you
+      chose a rung on the mode ladder per session; a settings file makes
+      the standing parts of that choice durable: actions on an allow list
+      run without a prompt, actions on a deny list never run at all, and
+      everything else asks. A prompt you answer the same way every time is
+      configuration waiting to be written down &mdash; the same release as
+      the retyped checklist, applied to clicks.
+    </p>
+    <p>
+      One property does the heavy lifting: <strong>a deny rule binds in
+      every mode.</strong> An allow list is convenience. A deny list is a
+      fence that holds even when the session runs with no prompts at all.
+      That is what makes the third setup below survivable. Here are three
+      setups to read and adapt &mdash; the mode-ladder logic from A2,
+      written down.
+    </p>
+
+    <h3>Cautious</h3>
+    <p>
+      Everything asks; secrets are fenced off outright. No standing
+      approvals, so verification is spread through the session, one small
+      yes at a time. This is the setup for a codebase you do not know yet,
+      for risky ground like billing or deploy code, and for your first
+      week with the tool. Its cost is interruptions. Pay it gladly where
+      the blast radius is large.
+    </p>
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>In Claude Code, settings are strict JSON under a
+      <code>permissions</code> key, per the
+      <a href="https://code.claude.com/docs/en/permissions">permissions docs</a>.
+      A cautious file:</p>
+      <pre><code>{
+  "permissions": {
+    "defaultMode": "default",
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ]
+  }
+}</code></pre>
+      <p>
+        <code>default</code> is the ask-before-most-actions mode from A2's
+        ladder. <code>Read(...)</code> deny rules block the agent's file
+        tools from those paths.
+      </p>
+    </aside>
+
+    <h3>Balanced</h3>
+    <p>
+      The commands you would always approve &mdash; run the program, run
+      the tests, read the git history &mdash; stop asking. Edits and
+      everything else still ask, and the secrets fence stays. This is the
+      daily-work setup: the prompts that remain are the ones that carry
+      information, because every reflex "yes" has been written down. Build
+      it from your own history &mdash; after a few sessions you know
+      exactly which three prompts you always approve.
+    </p>
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>A balanced file, for the practice folder:</p>
+      <pre><code>{
+  "permissions": {
+    "defaultMode": "default",
+    "allow": [
+      "Bash(python3 wordstats.py *)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)"
+    ]
+  }
+}</code></pre>
+      <p>
+        A trailing <code>*</code> matches any arguments, and
+        <code>Bash(git log *)</code> also matches bare <code>git log</code>.
+        Put the <code>*</code> after the subcommand: <code>Bash(git *)</code>
+        would allow every git command. When you answer a prompt with "Yes,
+        and don't ask again", Claude Code writes exactly this kind of allow
+        rule to <code>.claude/settings.local.json</code> for you &mdash;
+        the balanced setup partly builds itself.
+      </p>
+    </aside>
+
+    <h3>Hands-off, with guardrails</h3>
+    <p>
+      Edits apply without asking and the routine commands run free, so the
+      session flows &mdash; and the deny list becomes the only fence, so
+      it gets serious: secrets, pushing, deleting. A2's two rules both
+      apply with full force. More autonomy granted means more verification
+      owed, so the diff review at the end is larger and non-negotiable.
+      And fully unattended operation &mdash; no prompts of any kind &mdash;
+      remains restricted to an isolated workspace: a container, a virtual
+      machine, a sandbox. The deny list holds in every mode, but a fence
+      is a complement to isolation, not a substitute for it.
+    </p>
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>A hands-off file with guardrails:</p>
+      <pre><code>{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Bash(git push *)",
+      "Bash(rm *)"
+    ]
+  }
+}</code></pre>
+      <p>
+        <code>acceptEdits</code> applies file edits without asking. Fully
+        unattended operation is a different mode,
+        <code>bypassPermissions</code> (started with
+        <code>claude --dangerously-skip-permissions</code>), which the
+        docs scope to isolated containers and VMs &mdash; deny rules still
+        apply even there. Note one limit: a deny rule stops the agent's
+        own tools, not a script the agent runs that opens files itself;
+        OS-level enforcement is the sandbox's job.
+      </p>
+    </aside>
+
+    <aside class="dated-callout">
+      <span class="callout-date">Verified 2026-10-30</span>
+      <p>
+        Where these files live, per the
+        <a href="https://code.claude.com/docs/en/settings">settings docs</a>:
+        <code>~/.claude/settings.json</code> is yours in every project;
+        <code>.claude/settings.json</code> is committed and shared with
+        the team; <code>.claude/settings.local.json</code> is yours in one
+        project, and Claude Code keeps it out of git. Matching list keys
+        merge across files. Run <code>/status</code> in a session to see
+        which files loaded. One catch: <code>defaultMode</code> values
+        <code>auto</code> and <code>bypassPermissions</code> take effect
+        from user settings, not from project or local files.
+      </p>
+    </aside>
+
+    <h2>Exercise: make it yours</h2>
+    <p>
+      Back to the practice folder. Both halves of this lesson are sitting
+      in it, waiting.
+    </p>
+    <p>
+      <strong>Part one: trim the bloated file.</strong> Open the practice
+      folder's <code>CLAUDE.md</code>. It is about a hundred lines, and it
+      is a fair portrait of how these files grow in the wild. Trim it with
+      one test per line: <em>would I otherwise retype this at the start of
+      a session?</em> Restated defaults fail the test. Descriptions of
+      what <code>wordstats.py</code> contains fail &mdash; the agent reads
+      the file. The Friday rule fails on its own terms. What survives is
+      roughly the run command, the expected-output check, and the
+      standard-library rule: a file that fits on one screen. Trim by hand,
+      or ask the agent to propose cuts and judge each one yourself. If you
+      do ask the agent, savor the irony: the session proposing the cuts is
+      itself obeying the bloated file, including the line that tells it to
+      explain every change in great detail. Bloat demonstrates its own
+      cost.
+    </p>
+    <p>
+      <strong>Part two: write your settings.</strong> Pick the setup that
+      matches the practice folder's actual risk &mdash; a throwaway
+      project with fast feedback &mdash; and adapt it. Create the settings
+      file inside the practice folder, start a fresh session, and ask the
+      agent to run the program. Your settings file holds the session in
+      the mode that asks, so the silence means something: with a matching
+      allow rule, the prompt you answered in your first win does not
+      appear. Then write one sentence,
+      to yourself, naming why this setup fits this work. That sentence is
+      the A2 habit &mdash; mode matched to risk, not to patience &mdash;
+      and it is the sentence you will reuse on your real repo, where the
+      answer is probably more cautious than the one you just gave.
+    </p>
+
+    <h2>Keep going</h2>
+    <p>
+      Two primary sources are worth your next twenty minutes: the
+      <a href="https://code.claude.com/docs/en/memory">memory docs</a> for
+      the instructions file, and the
+      <a href="https://code.claude.com/docs/en/permissions">permissions docs</a>
+      for the rule syntax &mdash; both are the ground truth behind this
+      lesson's dated callouts. And your standing reminder has new teeth
+      now that you have tool access: the agent is your teacher. Paste in a
+      question about anything unclear in this lesson &mdash; starting with
+      any line of the settings files above.
+    </p>
+
+    <!-- Quiz: exactly 5 questions. Markup contract documented in assets/quiz.js. -->
+    <section class="quiz" id="quiz">
+      <h2>Quiz</h2>
+      <ol class="quiz-questions">
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">Which line earns its place in a project's instructions file?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">A reminder to write clean, readable, well-structured code</button></li>
+            <li><button type="button" data-option="b">The run command and output check you retype each session</button></li>
+            <li><button type="button" data-option="c">A note explaining which file holds the project's main code</button></li>
+            <li><button type="button" data-option="d">A closing thank-you to the agent for reading the whole file</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The test is "would I otherwise retype it?" Restated defaults, descriptions of what the code shows, and filler all cost tokens in every session and change no behavior.</p>
+        </li>
+        <li class="quiz-question" data-correct="c">
+          <p class="quiz-stem">Your instructions file has grown to 400 lines. What is the cost?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">None, because the agent skims long files and keeps the best parts</button></li>
+            <li><button type="button" data-option="b">None, because the file loads once at install time and never again</button></li>
+            <li><button type="button" data-option="c">Every session pays its tokens before work starts, and adherence drops</button></li>
+            <li><button type="button" data-option="d">Git slows down, because each commit has to rescan the whole file</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The file loads into every session's context window, so every line is paid on every start — the primer's math. And a bloated file buries the lines that matter, so the agent follows them less reliably.</p>
+        </li>
+        <li class="quiz-question" data-correct="a">
+          <p class="quiz-stem">You are about to change billing code in a repo you have never read. Which setup fits?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">Cautious, because unknown code plus real money means every action should ask</button></li>
+            <li><button type="button" data-option="b">Balanced, because billing changes are routine work on most engineering teams</button></li>
+            <li><button type="button" data-option="c">Hands-off, because the full diff gets a careful read at the very end</button></li>
+            <li><button type="button" data-option="d">Whichever of the three setups has felt the fastest for you this week</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>Match the setup to the risk of the work, not to your patience. Unknown code and a large blast radius earn maximum control; speed preferences measure nothing about risk.</p>
+        </li>
+        <li class="quiz-question" data-correct="d">
+          <p class="quiz-stem">What does the hands-off setup require before you run it?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">A written plan that you approved in the session before any edit</button></li>
+            <li><button type="button" data-option="b">A full test suite that already passes cleanly on the main branch</button></li>
+            <li><button type="button" data-option="c">A teammate who watches the session and reads along as it works</button></li>
+            <li><button type="button" data-option="d">A deny-list fence, plus isolation once no prompts remain at all</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>The deny list is the fence that binds in every mode, and fully unattended operation stays restricted to isolated environments — A2's rule, now written into configuration. The other options are good practices, not the requirement.</p>
+        </li>
+        <li class="quiz-question" data-correct="b">
+          <p class="quiz-stem">"Never read the .env file." Where should that rule live?</p>
+          <ul class="quiz-options">
+            <li><button type="button" data-option="a">In the instructions file, written in bold so the agent takes it seriously</button></li>
+            <li><button type="button" data-option="b">In a settings deny rule, because the tool enforces it in every mode</button></li>
+            <li><button type="button" data-option="c">In every prompt you type, so the rule stays fresh inside the window</button></li>
+            <li><button type="button" data-option="d">Nowhere, because agents already refuse to read credential files anyway</button></li>
+          </ul>
+          <p class="quiz-feedback" hidden></p>
+          <p class="quiz-explain" hidden>An instructions file is context the agent reads and weighs; a deny rule is a fence the tool enforces, prompts or no prompts. "Must never happen" belongs with enforcement — the next lesson builds on exactly this line.</p>
+        </li>
+      </ol>
+      <p class="quiz-score" hidden></p>
+    </section>
+
+    <!-- Pointer: the optional "apply this to your own work" line. Always last. -->
+    <p class="pointer">Optional: write the instructions file and the permission settings for your own repo. Start from what you retyped and re-approved in your last three sessions — nothing else earns a line yet.</p>
+  </main>
+
+  <script>
+// quiz.js — instant-feedback quiz widget. Vanilla JS, no dependencies.
+//
+// Expected markup, one block per lesson:
+//
+//   <section class="quiz" id="quiz">
+//     <h2>Quiz</h2>
+//     <ol class="quiz-questions">
+//       <li class="quiz-question" data-correct="b">
+//         <p class="quiz-stem">Question text?</p>
+//         <ul class="quiz-options">
+//           <li><button type="button" data-option="a">First option</button></li>
+//           <li><button type="button" data-option="b">Second option</button></li>
+//         </ul>
+//         <p class="quiz-feedback" hidden></p>
+//         <p class="quiz-explain" hidden>Why the answer is right.</p>
+//       </li>
+//     </ol>
+//     <p class="quiz-score" hidden></p>
+//   </section>
+//
+// Behavior: the learner clicks one option per question. The widget shows
+// right or wrong at once, reveals the explanation, and locks the question.
+// When every question is answered, the widget shows the score.
+
+(function () {
+  'use strict';
+
+  function answerQuestion(question, button, state) {
+    var correct = question.getAttribute('data-correct');
+    var chosen = button.getAttribute('data-option');
+    var isCorrect = chosen === correct;
+
+    question.querySelectorAll('.quiz-options button').forEach(function (b) {
+      b.disabled = true;
+      if (b.getAttribute('data-option') === correct) {
+        b.classList.add('correct');
+      }
+    });
+    if (!isCorrect) {
+      button.classList.add('incorrect');
+    }
+
+    var feedback = question.querySelector('.quiz-feedback');
+    if (feedback) {
+      feedback.textContent = isCorrect
+        ? 'Correct.'
+        : 'Not quite. The marked option is the answer.';
+      feedback.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+      feedback.hidden = false;
+    }
+
+    var explain = question.querySelector('.quiz-explain');
+    if (explain) {
+      explain.hidden = false;
+    }
+
+    state.answered += 1;
+    if (isCorrect) {
+      state.correct += 1;
+    }
+    if (state.answered === state.total && state.scoreEl) {
+      state.scoreEl.textContent =
+        'Score: ' + state.correct + ' of ' + state.total + '.';
+      state.scoreEl.hidden = false;
+    }
+  }
+
+  function initQuiz(quiz) {
+    var questions = quiz.querySelectorAll('.quiz-question');
+    var state = {
+      total: questions.length,
+      answered: 0,
+      correct: 0,
+      scoreEl: quiz.querySelector('.quiz-score')
+    };
+
+    questions.forEach(function (question) {
+      question.querySelectorAll('.quiz-options button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          answerQuestion(question, button, state);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.quiz').forEach(initQuiz);
+  });
+})();
+</script>
+</body>
+</html>
