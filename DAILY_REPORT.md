@@ -8,7 +8,7 @@
 | #13 | 2026-10-29 | feat: banned-word list and plain-language check | task 2 |
 | #14 | 2026-10-29 | docs: teach-curriculum fork covers post-access lessons | task 3 |
 
-Waves 1 and 2 of the applied-phase plan are complete. Every merge maps to a plan task; no scope creep and no reverts. PR #13's merge resolved a DECISIONS.md numbering collision (task 3's entry became D38) — bookkeeping only.
+Waves 1 and 2 of the applied-phase plan are complete. Every merge maps to a plan task; no scope creep and no reverts. Task 3's branch (PR #14) resolved a DECISIONS.md numbering collision when it merged main after #13 landed (task 3's entry became D38) — bookkeeping only.
 
 ## Open PRs awaiting human merge
 
