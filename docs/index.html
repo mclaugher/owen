@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Agentic Coding Fundamentals — Pre-access Core</title>
+  <title>Agentic Coding Fundamentals — Track A</title>
   <style>
 /* lesson.css — shared visual language for every lesson page and the index.
    Inlined into each lesson by scripts/inline.py at generation time. */
@@ -178,12 +178,22 @@ pre code { padding: 0; background: none; }
   font-style: italic;
 }
 
+/* Suggested experience (D35): encouragement, never a gate. */
+.suggested-experience {
+  border: 1px solid var(--border);
+  background: var(--callout-bg);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 6px;
+}
+
 /* Print */
 @media print {
   html { background: #ffffff; color: #000000; }
   body { max-width: none; padding: 0; font-size: 11pt; }
   .quiz-options button { border: 1px solid #888888; }
   .dated-callout { border-left: 3pt solid #000000; background: none; }
+  .suggested-experience { border: 1pt solid #000000; background: none; }
   .pointer { border: 1pt dashed #000000; }
   a { color: #000000; }
 }
@@ -192,24 +202,41 @@ pre code { padding: 0; background: none; }
 <body>
   <header>
     <h1>Agentic Coding Fundamentals</h1>
-    <p class="lesson-meta">Pre-access core · v0.1.0 · about one hour total</p>
+    <p class="lesson-meta">Track A: Foundations · v0.2.0 · eight lessons</p>
   </header>
 
   <main>
     <p>
-      This is the pre-access core of an open curriculum on agentic coding.
-      It is built for the working engineer: competent in git and one
-      mainstream language, new to agentic coding tools, short on time. The
-      four lessons below need no tool access, no account, and no network.
-      Each page is self-contained and works offline. Each ends with a
-      five-question instant-feedback quiz.
+      This is Track A of an open curriculum on agentic coding. It is built
+      for the working engineer: new to agentic coding tools, short on
+      time. Eight lessons in two phases. The pre-access core needs no tool
+      access, no account, and no network. The applied phase puts an
+      agentic coding tool in your hands, and every exercise file it needs
+      is packed inside the lesson page. Each page is self-contained and
+      works offline. Each ends with a five-question instant-feedback
+      quiz.
     </p>
+
+    <aside class="suggested-experience">
+      <p>
+        <strong>Suggested experience.</strong> You will get the most out
+        of this course if you are comfortable with a terminal, know git
+        basics, can read code in one language, and have an editor
+        installed. The list is encouragement, not a gate. You can take
+        the course without any item on it.
+      </p>
+    </aside>
+
     <p>
       Take the lessons in order. Each one opens where the last one left a
       question hanging.
     </p>
 
-    <h2>The lessons</h2>
+    <h2>The pre-access core</h2>
+    <p>
+      Four lessons, about one hour total. No tool access required, so you
+      can finish them before your access request clears.
+    </p>
     <ol>
       <li>
         <a href="lessons/0000-where-tokens-actually-go.html">Where Tokens Actually Go</a>
@@ -240,21 +267,54 @@ pre code { padding: 0; background: none; }
       </li>
     </ol>
 
-    <h2>What the full curriculum adds</h2>
+    <h2>The applied phase</h2>
     <p>
-      The pre-access core is the start of a larger curriculum. Later
-      releases add the rest, built on the same primer:
+      Four lessons, about 20 minutes each plus hands-on practice. Tool
+      access starts here. Each lesson hands you a small practice folder,
+      packed inside the page behind a download button that works offline.
+      Re-downloading the folder resets the exercise.
+    </p>
+    <ol start="5">
+      <li>
+        <a href="lessons/0004-first-win-and-your-setup.html">First Win, Then Make It Yours</a>
+        <span class="lesson-meta">· A4 · about 20 minutes</span><br>
+        Your first real session fixes a planted bug end to end. Then the
+        instructions file every session reads first, and three permission
+        setups to read and adapt.
+      </li>
+      <li>
+        <a href="lessons/0005-guardrails-and-add-ons.html">Guardrails and Add-ons</a>
+        <span class="lesson-meta">· A5 · about 20 minutes</span><br>
+        A guardrail is a rule the tool enforces, not a rule the agent
+        reads. Build one, watch it fire and clear. Then judge one add-on
+        against its standing cost.
+      </li>
+      <li>
+        <a href="lessons/0006-small-sessions.html">Small Sessions</a>
+        <span class="lesson-meta">· A6 · about 20 minutes</span><br>
+        End sessions on purpose: one task per session, the plan in a
+        file, commits as save points. The exercise runs one task across
+        two sessions that never meet.
+      </li>
+      <li>
+        <a href="lessons/0007-when-things-go-wrong.html">When Things Go Wrong, and What It Cost</a>
+        <span class="lesson-meta">· A7 · about 20 minutes</span><br>
+        The warning signs of a session gone bad, the restart rule, and
+        the two bills every session can show you. The finale exercise
+        uses every habit in the course, then reads what it cost.
+      </li>
+    </ol>
+
+    <h2>What comes next</h2>
+    <p>
+      Track A is complete. Later releases add two more tracks, built on
+      the same primer:
     </p>
     <ul>
       <li>
-        <strong>Track A, continued (A4–A6).</strong> Owning your setup and
-        the <code>.claude</code> directory, iteration patterns, and failure
-        modes with recovery &mdash; the lessons you take once you have tool
-        access.
-      </li>
-      <li>
-        <strong>Track B — Efficiency and Setup Ownership.</strong> For
-        engineers already using the tools: audit sessions, context hygiene,
+        <strong>Track B — Efficiency and Setup Ownership.</strong> The
+        efficiency course that lesson 0007 points to, for engineers
+        already using the tools: audit sessions, context hygiene,
         right-sizing the model and thinking dials, and packaging a setup
         worth sharing.
       </li>
@@ -262,10 +322,6 @@ pre code { padding: 0; background: none; }
         <strong>Track C — Structured Autonomy.</strong> An elective on
         running agents with less supervision: plans and ADRs as durable
         state, role loops and model routing, and parallel sessions.
-      </li>
-      <li>
-        <strong>A practice repo.</strong> A seeded exercise codebase for
-        the post-access lessons, built from publicly available material.
       </li>
     </ul>
 
